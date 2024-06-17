@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: python:3.7-slim
+
+%post
+    pip install \
+       scanpy \
+       anndata \
+       cellbender \
+       doubletdetection \
+       numpy \
+       pandas \
+       scipy \
+       joblib \
+       matplotlib 
+
+%runscript
+    exec python "$@"
+

@@ -3,6 +3,7 @@
 nextflow.enable.dsl = 2
 
 include {CELLBENDER} from './modules/cellbender'
+include {DOUBLETDETECTION} from './modules/doubletdetection'
 
 workflow {
     // access the samplesheet
