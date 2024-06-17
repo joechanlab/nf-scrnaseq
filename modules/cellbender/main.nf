@@ -5,16 +5,17 @@ process CELLBENDER {
    publishDir "${params.outdir}/cellbender/", mode: 'copy'
 
    input:
-   path umi
+   tuple val(name), path(path), val(expected_cells)
 
    output:
-   path "${umi.baseName}_cellbender.h5", emit: cleaned_umi
+   path "${name}_cellbender.h5", emit: cellbender_h5
 
    script:
    """
    cellbender remove-background \
       --cuda \
-      --input $umi \
-      --output ${umi.baseName}_cellbender.h5
+      --input ${path} \
+      --expected-cells ${expected_cells} \
+      --output ${name}_cellbender.h5
    """
 }
