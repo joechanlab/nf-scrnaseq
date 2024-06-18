@@ -6,14 +6,14 @@ process DOUBLETDETECTION {
    input:
    tuple val(name), path(path), val(expected_cells), val(total_droplets_included)
    path cellbender_h5
-
+   
    output:
    path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
 
    script:
    """
    python ${baseDir}/bin/doublet_detection.py \
-      --cellbender ${path} \
+      --cellbender ${cellbender_h5} \
       --output ${name}_doubletdetection.h5ad
    """
 }

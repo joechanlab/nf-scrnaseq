@@ -196,22 +196,22 @@ adata_batch.var_names_make_unique()
 sc.pp.filter_genes(adata_batch, min_cells=1)
 
 # Run doublet detection
-# clf = doubletdetection.BoostClassifier(
-#     n_iters=args.n_iterations,
-#     clustering_algorithm="leiden",
-#     standard_scaling=args.standard_scaling,
-#     pseudocount=0.1,
-#     n_jobs=-1,
-# )
+clf = doubletdetection.BoostClassifier(
+    n_iters=args.n_iterations,
+    clustering_algorithm="leiden",
+    standard_scaling=args.standard_scaling,
+    pseudocount=0.1,
+    n_jobs=-1,
+)
 
-# # Calculate doublets
-# doublets = clf.fit(adata_batch.X).predict(p_thresh=args.p_thresh, voter_thresh=args.voter_thresh)
-# doublet_score = clf.doublet_score()
+# Calculate doublets
+doublets = clf.fit(adata_batch.X).predict(p_thresh=args.p_thresh, voter_thresh=args.voter_thresh)
+doublet_score = clf.doublet_score()
 
-# adata_batch.obs["doublet"] = doublets
-# adata_batch.obs["doublet_score"] = doublet_score
+adata_batch.obs["doublet"] = doublets
+adata_batch.obs["doublet_score"] = doublet_score
 
-# adata_batch.write_h5ad(args.output)
+adata_batch.write_h5ad(args.output)
 
 # Save convergence plot with sample name
 # f = doubletdetection.plot.convergence(clf, save = f"{args.outdir}/{sample_name}.convergence_test.pdf", show=True, p_thresh=1e-7, voter_thresh=0.8)
