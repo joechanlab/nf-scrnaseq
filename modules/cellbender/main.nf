@@ -5,7 +5,7 @@ process CELLBENDER {
    publishDir "${params.outdir}/cellbender/", mode: 'copy'
 
    input:
-   tuple val(name), path(path), val(expected_cells)
+   tuple val(name), path(path), val(expected_cells), val(total_droplets_included)
 
    output:
    path "${name}_cellbender.h5", emit: cellbender_h5
@@ -15,7 +15,8 @@ process CELLBENDER {
    cellbender remove-background \
       --cuda \
       --input ${path} \
+      --output ${name}_cellbender.h5 \
       --expected-cells ${expected_cells} \
-      --output ${name}_cellbender.h5
+      --total-droplets-included ${total_droplets_included}
    """
 }

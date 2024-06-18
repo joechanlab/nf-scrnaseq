@@ -7,4 +7,5 @@ data/
 *.sif
 *.h5
 *.h5ad
+*.log
 __pycache__/

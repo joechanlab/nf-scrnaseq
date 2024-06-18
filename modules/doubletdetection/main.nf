@@ -4,7 +4,7 @@ process DOUBLETDETECTION {
    publishDir "${params.outdir}/doubletdetection/", mode: 'copy'
 
    input:
-   tuple val(name), path(path), val(expected_cells)
+   tuple val(name), path(path), val(expected_cells), val(total_droplets_included)
    path cellbender_h5
 
    output:
@@ -12,7 +12,7 @@ process DOUBLETDETECTION {
 
    script:
    """
-   python doublet_detection.py \
+   python ${baseDir}/bin/doublet_detection.py \
       --cellbender ${path} \
       --output ${name}_doubletdetection.h5ad
    """

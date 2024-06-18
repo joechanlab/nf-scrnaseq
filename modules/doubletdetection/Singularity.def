@@ -1,17 +1,8 @@
 Bootstrap: docker
-From: python:3.7-slim
+From: python:3.8-slim
 
 %post
-    pip install \
-       scanpy \
-       anndata \
-       cellbender \
-       doubletdetection \
-       numpy \
-       pandas \
-       scipy \
-       joblib \
-       matplotlib 
+    pip install doubletdetection scanpy anndata numpy scipy tables
 
 %runscript
     exec python "$@"

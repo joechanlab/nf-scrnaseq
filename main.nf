@@ -17,7 +17,8 @@ workflow {
         def name = row[0]
         def path = file(row[1])
         def expected_cells = row[2].trim().toInteger()
-        return tuple(name, path, expected_cells)
+        def total_droplets_included = row[3].trim().toInteger()
+        return tuple(name, path, expected_cells, total_droplets_included)
     }
     
     // run Cellbender
