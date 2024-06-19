@@ -2,11 +2,9 @@ Bootstrap: docker
 
 From: continuumio/miniconda3
 
-%files
-    environment.yml /opt/environment.yml
-
 %post
-    /opt/conda/bin/conda env create -f /opt/environment.yml
+    wget https://github.com/Mamie/nf-scrnaseq/blob/main/modules/scran/environment.yml
+    /opt/conda/bin/conda env create -f environment.yml
 
 %runscript
-    exec /opt/conda/envs/$(head -n 1 /opt/environment.yml | cut -f 2 -d ' ')/bin/"$@"
+    exec /opt/conda/envs/$(head -n 1 environment.yml | cut -f 2 -d ' ')/bin/"$@"

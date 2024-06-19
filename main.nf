@@ -5,6 +5,7 @@ nextflow.enable.dsl = 2
 include {CELLBENDER} from './modules/cellbender'
 include {DOUBLETDETECTION} from './modules/doubletdetection'
 include {AGGREGATION} from './modules/aggregation'
+include {SCRAN} from './modules/scran'
 
 workflow {
     // access the samplesheet
@@ -30,5 +31,7 @@ workflow {
     
     // aggregate the outputs
     AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
-
+    
+    // SCRAN normalization
+    SCRAN(AGGREGATION.out.aggregation_h5ad)
 }
