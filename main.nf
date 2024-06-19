@@ -4,6 +4,7 @@ nextflow.enable.dsl = 2
 
 include {CELLBENDER} from './modules/cellbender'
 include {DOUBLETDETECTION} from './modules/doubletdetection'
+include {AGGREGATION} from './modules/aggregation'
 
 workflow {
     // access the samplesheet
@@ -26,4 +27,8 @@ workflow {
     
     // run DoubletDetection
     DOUBLETDETECTION(ch_input, CELLBENDER.out.cellbender_h5)
+    
+    // aggregate the outputs
+    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+
 }

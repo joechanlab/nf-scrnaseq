@@ -7,17 +7,16 @@ from utils import get_basename_without_extension
 
 parser = argparse.ArgumentParser(
     description="wrapper for concatenating the samples.")
-parser.add_argument('-i', '--input', required=True, help='Path to directory containing files to be concatenated.')
+parser.add_argument('inputs', nargs = "*", help='Paths to directory containing files to be concatenated.')
 parser.add_argument("-o", "--output", required = True, help = "The output h5ad file path.")
 
 args = parser.parse_args()
 
 adata_list = []
 
-for h5_file_path in os.listdir(args.input):
-    adata_path = os.path.join(args.input, h5_file_path)
-    adata = sc.read(adata_path)
-    sample_name = h5_file_path
+for idx, h5_file_path in enumerate(args.inputs, start=1):
+    print(h5_file_path)
+    adata = sc.read(h5_file_path)
     adata.obs['sample_name'] = get_basename_without_extension(h5_file_path).rsplit('_', 1)[0]
     adata.obs.index = adata.obs['sample_name'] + "_" + adata.obs.index
     adata.var_names_make_unique()
