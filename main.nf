@@ -6,6 +6,7 @@ include {CELLBENDER} from './modules/cellbender'
 include {DOUBLETDETECTION} from './modules/doubletdetection'
 include {AGGREGATION} from './modules/aggregation'
 include {SCRAN} from './modules/scran'
+include {SCVI} from './modules/scvi'
 
 workflow {
     // access the samplesheet
@@ -34,4 +35,7 @@ workflow {
     
     // SCRAN normalization
     SCRAN(AGGREGATION.out.aggregation_h5ad)
+    
+    // SCVI batch correction
+    SCVI(SCRAN.out.scran_h5ad)
 }
