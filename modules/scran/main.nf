@@ -11,7 +11,9 @@ process SCRAN {
 
    script:
    """
-   /opt/conda/envs/scran/bin/Rscript ${baseDir}/bin/scran.R \
+   export PATH=/opt/conda/envs/scran/bin/:$PATH
+   export HOME=${workDir}
+   Rscript ${baseDir}/bin/scran.R \
       ${aggregation_h5ad} \
       scran.h5ad
    """
