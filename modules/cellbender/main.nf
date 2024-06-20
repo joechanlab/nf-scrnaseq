@@ -11,7 +11,9 @@ process CELLBENDER {
    path "${name}_cellbender.h5", emit: cellbender_h5
 
    script:
+   def gpu_index = task.index % params.maxForks
    """
+   export CUDA_VISIBLE_DEVICES=$gpu_index
    cellbender remove-background \
       --cuda \
       --input ${path} \
