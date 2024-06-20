@@ -2,7 +2,6 @@ import os
 import argparse
 import scanpy as sc
 import numpy as np
-import pandas as pd
 from utils import get_basename_without_extension
 
 parser = argparse.ArgumentParser(
@@ -29,6 +28,8 @@ combined_adata.var["mt"] = combined_adata.var_names.str.lower().str.startswith('
 combined_adata.var["ribo"] = combined_adata.var_names.str.lower().str.startswith(("rps", "rpl"))
 combined_adata.var["hb"] = combined_adata.var_names.str.lower().str.contains("^hb[^(p)]")
 sc.pp.calculate_qc_metrics(
-    combined_adata, qc_vars=["mt", "ribo"], inplace=True, log1p=True, percent_top = (50, 100)
+    combined_adata, qc_vars=["mt", "ribo", "hb"], inplace=True, log1p=True, percent_top = (50, 100)
 )
+combined_adata.obs['mito_frac'] = np.sum(combined_adata[:, combined_adata.var["mt"]].X, axis=1) / np.sum(combined_adata.X, axis=1)
+
 combined_adata.write_h5ad(args.output)
