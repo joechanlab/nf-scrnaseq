@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--raw_h5', help='Path to raw 10x h5 format.')
 parser.add_argument("--filtered_h5", help = "Path to filtered 10x h5 format.")
 parser.add_argument("--output_h5", help = "Path to output h5 format.")
+parser.add_argument("--total_droplets_included", default = 2000, type = int, help = "Estimate of total number of droplets.")
 
 args = parser.parse_args()
 
@@ -16,16 +17,13 @@ args = parser.parse_args()
 adata_filtered = load_anndata_from_input(args.filtered_h5)
 expected_cells = adata_filtered.shape[0]
 
-# number of surely empty droplet
-total_droplets_included = 2000
-
 command = f"""
 cellbender remove-background \
       --cuda \
       --input {args.raw_h5} \
       --output {args.output_h5} \
       --expected-cells {expected_cells} \
-      --total-droplets-included {total_droplets_included}
+      --total-droplets-included {args.total_droplets_included}
 """
 
 print(command)

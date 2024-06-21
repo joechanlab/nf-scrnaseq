@@ -21,14 +21,10 @@ workflow {
         def raw_path = file(row[1])
         def filtered_path = file(row[2])
         return tuple(name, raw_path, filtered_path)
-        // def expected_cells = row[2].trim().toInteger()
-        // def total_droplets_included = row[3].trim().toInteger()
-        // return tuple(name, path, expected_cells, total_droplets_included)
     }
     
-    
     // run Cellbender
-    CELLBENDER(ch_input) //, DROPLETCOUNT.out.expected_cells, DROPLETCOUNT.total_droplets_included)
+    CELLBENDER(ch_input)
     
     // run DoubletDetection
     DOUBLETDETECTION(ch_input, CELLBENDER.out.cellbender_h5)
