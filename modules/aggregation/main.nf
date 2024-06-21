@@ -14,10 +14,10 @@ process AGGREGATION {
    python ${baseDir}/bin/aggregation.py \
       ${doublet_h5ad} \
       aggregation.h5ad \
-      --percent_top ${params.percent_top} \
-      --total_counts ${params.total_counts} \
-      --n_genes_by_counts  ${params.n_genes_by_counts} \
-      --log10GenesPerUMI ${params.log10GenesPerUMI} \
-      --mito_frac ${params.mito_frac}
+      --percent_top ${params.aggregation.percent_top} \
+      --total_counts ${params.aggregation.total_counts} \
+      --n_genes_by_counts  ${params.aggregation.n_genes_by_counts} \
+      --log10GenesPerUMI ${params.aggregation.log10GenesPerUMI} \
+      --mito_frac ${params.aggregation.mito_frac}
    """
 }

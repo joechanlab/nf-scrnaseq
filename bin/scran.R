@@ -12,11 +12,8 @@ outpath <- args[2]
 print("Data loaded")
 
 # Create single cell experiment
-sce <- readH5AD(inpath)
-
 print("SCE created")
-assays(sce)[['counts']] <- assays(sce)[['X']]
-assays(sce)[['X']] <- NULL
+sce <- readH5AD(inpath, X_name = 'counts')
 
 # Calculate stats
 qcstats <- perCellQCMetrics(sce)
@@ -39,7 +36,4 @@ summary(sizeFactors(sce))
 sce <- logNormCounts(sce, log=F)
 
 # save the file
-assays(sce)[['X']] <- assays(sce)[['normcounts']]
-assays(sce)[['counts']] <- NULL
-assays(sce)[['normcounts']] <- NULL
-writeH5AD(sce, outpath)
+writeH5AD(sce, outpath, X_name = 'normcounts')

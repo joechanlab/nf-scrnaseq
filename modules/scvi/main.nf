@@ -14,6 +14,8 @@ process SCVI {
    export NUMBA_CACHE_DIR=/tmp/numba_cache
    python ${baseDir}/bin/scvi_norm.py \
       --input ${scran_h5ad} \
-      --output scvi.h5ad
+      --output scvi.h5ad \
+      --n_latent ${params.scvi.n_latent} \
+      --n_top_genes ${params.scvi.n_top_genes}
    """
 }
