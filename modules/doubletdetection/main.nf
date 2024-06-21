@@ -4,7 +4,7 @@ process DOUBLETDETECTION {
    publishDir "${params.outdir}/doubletdetection/", mode: 'copy'
 
    input:
-   tuple val(name), path(path), val(expected_cells), val(total_droplets_included)
+   tuple val(name), path(raw_path), path(filtered_path)
    path cellbender_h5
    
    output:
@@ -14,6 +14,7 @@ process DOUBLETDETECTION {
    """
    python ${baseDir}/bin/doublet_detection.py \
       --cellbender ${cellbender_h5} \
+      --umi ${filtered_path} \
       --output ${name}_doubletdetection.h5ad
    """
 }

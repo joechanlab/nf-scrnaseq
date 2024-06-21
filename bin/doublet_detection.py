@@ -22,7 +22,7 @@ adata_batch = anndata_from_h5(args.cellbender)
 
 if args.umi != '':
     # Read sample data
-    adata_sample = sc.read_10x_mtx(args.umi)
+    adata_sample = sc.read_10x_h5(args.umi)
     sample_name = get_basename_without_extension(args.umi)
 
     # Extract sample barcodes
