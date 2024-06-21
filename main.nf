@@ -18,15 +18,14 @@ workflow {
     // create a channel from the paths
     ch_input = Channel.from(sample_sheet_data).map { row ->
         def name = row[0]
-        def path = file(row[1])
-        // def filtered_path = file(row[2])
-        def expected_cells = row[2].trim().toInteger()
-        def total_droplets_included = row[3].trim().toInteger()
-        return tuple(name, path, expected_cells, total_droplets_included)
+        def raw_path = file(row[1])
+        def filtered_path = file(row[2])
+        return tuple(name, raw_path, filtered_path)
+        // def expected_cells = row[2].trim().toInteger()
+        // def total_droplets_included = row[3].trim().toInteger()
+        // return tuple(name, path, expected_cells, total_droplets_included)
     }
     
-    // get an estimate of cell counts
-    // DROPLETCOUNT(ch_input)
     
     // run Cellbender
     CELLBENDER(ch_input) //, DROPLETCOUNT.out.expected_cells, DROPLETCOUNT.total_droplets_included)
