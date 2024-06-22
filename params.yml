@@ -1,0 +1,17 @@
+samplesheet: "./data/sampleSheet.csv"
+outdir: "../results-cellbender-test"
+workdir: "../work-cellbender-test"
+cellbender:
+    total_droplets_included: 2000
+aggregation:
+    percent_top: "50,100"
+    total_counts: 1
+    n_genes_by_counts: 1
+    log10GenesPerUMI: 0
+    mito_frac: 1
+scvi:
+    n_latent: 10
+    n_top_genes: 10 
+with_gpu: true
+max_memory: "6.GB"
+max_cpus: 6
