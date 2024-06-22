@@ -1,5 +1,5 @@
 process SCRAN {
-   label (params.with_gpu? 'gpus': 'process_single')
+   label 'process_single'
    container 'library://mamie_wang/nf-scrnaseq/scran.sif:latest'
    publishDir "${params.outdir}/scran/", mode: 'copy'
 

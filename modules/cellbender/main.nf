@@ -1,5 +1,5 @@
 process CELLBENDER {
-   label (params.with_gpu? 'gpus': 'process_single')
+   label 'gpus'
    container 'us.gcr.io/broad-dsde-methods/cellbender:latest'
    containerOptions '--nv'
    publishDir "${params.outdir}/cellbender/", mode: 'copy'
@@ -21,10 +21,3 @@ process CELLBENDER {
       --total_droplets_included ${params.cellbender.total_droplets_included}
    """
 }
-
-// cellbender remove-background \
-//      --cuda \
-//      --input ${path} \
-//      --output ${name}_cellbender.h5 \
-//      --expected-cells ${expected_cells} \
-//      --total-droplets-included ${total_droplets_included}

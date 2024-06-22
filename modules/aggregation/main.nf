@@ -1,5 +1,5 @@
 process AGGREGATION {
-   label (params.with_gpu? 'gpus': 'process_single')
+   label 'process_single'
    container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
    publishDir "${params.outdir}/aggregation/", mode: 'copy'
 
