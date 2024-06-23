@@ -4,7 +4,7 @@ process AGGREGATION {
    publishDir "${params.outdir}/aggregation/", mode: 'copy'
 
    input:
-   tuple file(doublet_h5ad)
+   tuple path(doublet_h5ad)
    
    output:
    path "aggregation.h5ad", emit: aggregation_h5ad

@@ -30,7 +30,7 @@ workflow {
     DOUBLETDETECTION(ch_input, CELLBENDER.out.cellbender_h5)
     
     // aggregate the outputs
-    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect().map { files -> tuple(files) })
     
     // SCRAN normalization
     SCRAN(AGGREGATION.out.aggregation_h5ad)

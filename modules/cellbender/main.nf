@@ -11,14 +11,23 @@ process CELLBENDER {
    path "${name}_cellbender.h5", emit: cellbender_h5
 
    script:
-   """
-   python ${baseDir}/bin/run_cellbender.py \
-      --raw_h5 ${raw_path} \
-      --filtered_h5 ${filtered_path} \
-      --output_h5 ${name}_cellbender.h5 \
-      --total_droplets_included ${params.cellbender.total_droplets_included}
-   """
+   def gpu_index = task.index % params.maxForks
+   if(task.executor == 'lsf')
+      """
+      python ${baseDir}/bin/run_cellbender.py \
+         --raw_h5 ${raw_path} \
+         --filtered_h5 ${filtered_path} \
+         --output_h5 ${name}_cellbender.h5 \
+         --total_droplets_included ${params.cellbender.total_droplets_included}
+      """
+       
+   else
+      """
+      export CUDA_VISIBLE_DEVICES=$gpu_index
+      python ${baseDir}/bin/run_cellbender.py \
+         --raw_h5 ${raw_path} \
+         --filtered_h5 ${filtered_path} \
+         --output_h5 ${name}_cellbender.h5 \
+         --total_droplets_included ${params.cellbender.total_droplets_included}
+      """
 }
-
-// def gpu_index = task.index % params.maxForks
-// export CUDA_VISIBLE_DEVICES=$gpu_index
