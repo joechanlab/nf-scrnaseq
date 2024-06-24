@@ -2,8 +2,10 @@ import os
 import tables
 import anndata
 import numpy as np
+import numpy.matlib
 import scipy.sparse as sp
-from typing import Dict, Optional
+from sklearn.decomposition import PCA
+from typing import Dict
 
 def get_basename_without_extension(path):
     basename = os.path.basename(path) 
@@ -152,3 +154,32 @@ def _fill_adata_slots_automatically(adata, d):
                 adata.uns[key] = value
         except Exception:
             print('Unable to load data into AnnData: ', key, value, type(value))
+
+
+def kneepoint(vec):
+    curve =  [1-x for x in vec]
+    nPoints = len(curve)
+    allCoord = np.vstack((range(nPoints), curve)).T
+    np.array([range(nPoints), curve])
+    firstPoint = allCoord[0]
+    lineVec = allCoord[-1] - allCoord[0]
+    lineVecNorm = lineVec / np.sqrt(np.sum(lineVec**2))
+    vecFromFirst = allCoord - firstPoint
+    scalarProduct = np.sum(vecFromFirst * numpy.matlib.repmat(lineVecNorm, nPoints, 1), axis=1)
+    vecFromFirstParallel = np.outer(scalarProduct, lineVecNorm)
+    vecToLine = vecFromFirst - vecFromFirstParallel
+    distToLine = np.sqrt(np.sum(vecToLine ** 2, axis=1))
+    idxOfBestPoint = np.argmax(distToLine)
+    return idxOfBestPoint
+
+def RunPCA(cts, var_threshold, n_components=300):
+    pca = PCA(n_components=n_components, svd_solver='randomized')
+    pca.fit(cts)
+
+    num_components = 0
+    num_components = max(num_components,kneepoint(np.cumsum(pca.explained_variance_ratio_)))
+    num_components = max(num_components,np.where(np.cumsum(pca.explained_variance_ratio_) > var_threshold)[0][0])
+    var_explained = np.cumsum(pca.explained_variance_ratio_)[num_components]
+    print('# Components = %d' % (num_components+1))
+    print('Variance explained = %f' % var_explained)
+    return pca, num_components, var_explained
