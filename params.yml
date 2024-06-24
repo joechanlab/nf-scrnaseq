@@ -1,5 +1,5 @@
-samplesheet: "./data/sampleSheet.csv"
-outdir: "../results-cellbender-test"
+samplesheet: "/data/chanjlab/wangm10/nf-scrnaseq/data/oliver_RPMN_2024_samplesheet.csv"
+outdir: "/data/chanjlab/oliver_RPMN_2024"
 cellbender:
     total_droplets_included: 2000
 aggregation:
@@ -11,6 +11,9 @@ aggregation:
 scvi:
     n_latent: 10
     n_top_genes: 10 
+postproessing:
+    n_pca_components: 3
+    n_diffmap_components: 3
 with_gpu: true
 max_memory: "6.GB"
 max_cpus: 6
