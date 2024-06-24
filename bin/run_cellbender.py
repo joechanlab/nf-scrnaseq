@@ -6,16 +6,18 @@ from cellbender.remove_background.downstream import load_anndata_from_input
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
-parser.add_argument('--raw_h5', help='Path to raw 10x h5 format.')
-parser.add_argument("--filtered_h5", help = "Path to filtered 10x h5 format.")
-parser.add_argument("--output_h5", help = "Path to output h5 format.")
-parser.add_argument("--total_droplets_included", default = 2000, type = int, help = "Estimate of total number of droplets.")
+parser.add_argument('raw_h5', help='Path to raw 10x h5 format.')
+parser.add_argument("output_h5", help = "Path to output h5 format.")
+parser.add_argument("total_droplets_included", default = 2000, type = int, help = "Estimate of total number of droplets.")
+parser.add_argument("--filtered_h5", help = "Path to filtered 10x h5 format.", nargs = "*",)
 
 args = parser.parse_args()
 
 # estimate of number of cells from cellranger
-adata_filtered = load_anndata_from_input(args.filtered_h5)
-expected_cells = adata_filtered.shape[0]
+expected_cells = 0
+for idx, h5_file_path in enumerate(args.inputs, start=1):
+    adata_filtered = load_anndata_from_input(args.filtered_h5)
+    expected_cells += adata_filtered.shape[0]
 
 command = f"""
 cellbender remove-background \

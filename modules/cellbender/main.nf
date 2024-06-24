@@ -5,7 +5,7 @@ process CELLBENDER {
    publishDir "${params.outdir}/cellbender/", mode: 'copy'
 
    input:
-   tuple val(name), path(raw_path), path(filtered_path) 
+   tuple val(name), path(raw_path), val(filtered_path) 
 
    output:
    path "${name}_cellbender.h5", emit: cellbender_h5
@@ -15,19 +15,19 @@ process CELLBENDER {
    if(task.executor == 'lsf')
       """
       python ${baseDir}/bin/run_cellbender.py \
-         --raw_h5 ${raw_path} \
+         ${raw_path} \
+         ${name}_cellbender.h5 \
+         ${params.cellbender.total_droplets_included}
          --filtered_h5 ${filtered_path} \
-         --output_h5 ${name}_cellbender.h5 \
-         --total_droplets_included ${params.cellbender.total_droplets_included}
       """
        
    else
       """
       export CUDA_VISIBLE_DEVICES=$gpu_index
       python ${baseDir}/bin/run_cellbender.py \
-         --raw_h5 ${raw_path} \
+         ${raw_path} \
+         ${name}_cellbender.h5 \
+         ${params.cellbender.total_droplets_included}
          --filtered_h5 ${filtered_path} \
-         --output_h5 ${name}_cellbender.h5 \
-         --total_droplets_included ${params.cellbender.total_droplets_included}
       """
 }
