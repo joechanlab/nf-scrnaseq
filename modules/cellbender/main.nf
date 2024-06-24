@@ -17,8 +17,8 @@ process CELLBENDER {
       python ${baseDir}/bin/run_cellbender.py \
          ${raw_path} \
          ${name}_cellbender.h5 \
-         ${params.cellbender.total_droplets_included}
-         --filtered_h5 ${filtered_path} \
+         ${params.cellbender.total_droplets_included} \
+         --filtered_h5 ${filtered_path}
       """
        
    else
@@ -27,7 +27,7 @@ process CELLBENDER {
       python ${baseDir}/bin/run_cellbender.py \
          ${raw_path} \
          ${name}_cellbender.h5 \
-         ${params.cellbender.total_droplets_included}
-         --filtered_h5 ${filtered_path} \
+         ${params.cellbender.total_droplets_included} \
+         --filtered_h5 ${filtered_path}
       """
 }

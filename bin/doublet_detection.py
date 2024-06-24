@@ -3,34 +3,34 @@ import os
 import argparse
 import scanpy as sc
 import doubletdetection
-from utils import anndata_from_h5, get_basename_without_extension
+from utils import anndata_from_h5
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
-parser.add_argument('-c', '--cellbender', default='', required=True, help='Path to 10x h5 format.')
-parser.add_argument("-o", "--output", required = True, default = os.getcwd(), help = "The output directory; default is current working directory")
-parser.add_argument('-i', '--umi', default='', required=False, help='Path to 10x h5 format.')
-parser.add_argument("-n", "--n_iterations", required = False, default = 10, type = int, help = "Number of iterations to use; default is 50")
-parser.add_argument("-s", "--standard_scaling", required = False, default = True, type = bool, help = "Whether to use standard scaling of normalized count matrix prior to PCA (True) or not (False); default is True")
-parser.add_argument("-t", "--p_thresh", required = False, default = 1e-7, type = float, help = "P-value threshold for doublet calling; default is 1e-16")
-parser.add_argument("-v", "--voter_thresh", required = False, default = 0.8, type = float, help = "Voter threshold for doublet calling; default is 0.5")
+parser.add_argument('input_h5', default='', required=True, help='Path to 10x h5 format.')
+parser.add_argument("output", help = "The output directory; default is current working directory")
+parser.add_argument("--n_iterations", required = False, default = 10, type = int, help = "Number of iterations to use; default is 50")
+parser.add_argument("--standard_scaling", required = False, default = True, type = bool, help = "Whether to use standard scaling of normalized count matrix prior to PCA (True) or not (False); default is True")
+parser.add_argument("--p_thresh", required = False, default = 1e-7, type = float, help = "P-value threshold for doublet calling; default is 1e-16")
+parser.add_argument("--voter_thresh", required = False, default = 0.8, type = float, help = "Voter threshold for doublet calling; default is 0.5")
+parser.add_argument('--filtered_h5', default='', nargs = "*", help='Path to cellranger filtered 10x h5 data.')
 
 args = parser.parse_args()
 
 # Read batch data
-adata_batch = anndata_from_h5(args.cellbender)
+adata_batch = anndata_from_h5(args.input_h5)
 
-if args.umi != '':
+if args.filtered_h5 != '':
     # Read sample data
-    adata_sample = sc.read_10x_h5(args.umi)
-    sample_name = get_basename_without_extension(args.umi)
+    adata_sample_barcodes = []
+    for idx, h5_file_path in enumerate(args.inputs, start=1):
+        adata_sample = sc.read_10x_h5(args.filtered_h5)
+        # Extract sample barcodes
+        adata_sample_barcodes.append(adata_sample.obs_names)
 
-    # Extract sample barcodes
-    adata_sample_barcodes = set(adata_sample.obs_names)
-
-    # Extract batch barcodes
+    adata_sample_barcodes = set(adata_sample_barcodes)
     adata_batch_barcodes = set(adata_batch.obs_names)
-
+    
     # Find the common barcodes between sample and batch
     common_barcodes = adata_sample_barcodes.intersection(adata_batch_barcodes)
 

@@ -13,8 +13,8 @@ process DOUBLETDETECTION {
    script:
    """
    python ${baseDir}/bin/doublet_detection.py \
-      --cellbender ${cellbender_h5} \
-      --umi ${filtered_path} \
-      --output ${name}_doubletdetection.h5ad
+      ${cellbender_h5} \
+      ${name}_doubletdetection.h5ad \
+      --filtered_h5 ${filtered_path} 
    """
 }
