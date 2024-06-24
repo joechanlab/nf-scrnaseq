@@ -3,7 +3,7 @@ Bootstrap: docker
 From: continuumio/miniconda3
 
 %post
-    wget https://raw.githubusercontent.com/Mamie/nf-scrnaseq/main/modules/scran/environment.yml
+    wget https://raw.githubusercontent.com/joechanlab/nf-scrnaseq/main/modules/scran/environment.yml
     /opt/conda/bin/conda env create -f environment.yml
 
 %environment
