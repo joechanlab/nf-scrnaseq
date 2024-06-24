@@ -14,6 +14,7 @@ process POSTPROCESSING {
    export NUMBA_CACHE_DIR=/tmp/numba_cache
    python ${baseDir}/bin/postprocessing.py \
       ${scvi_h5ad} \
-      postprocessing.h5ad 
+      postprocessing.h5ad \
+      --n_pca_components ${params.postprocessing.n_pca_components}
    """
 }

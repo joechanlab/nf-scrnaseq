@@ -8,7 +8,7 @@ process CELLBENDER {
    tuple val(name), path(raw_path), val(filtered_path) 
 
    output:
-   path "${name}_cellbender.h5ad", emit: cellbender_h5ad
+   path "${name}_cellbender.h5", emit: cellbender_h5
 
    script:
    def gpu_index = task.index % params.maxForks
@@ -16,9 +16,9 @@ process CELLBENDER {
       """
       python ${baseDir}/bin/run_cellbender.py \
          ${raw_path} \
-         ${name}_cellbender.h5ad \
+         ${name}_cellbender.h5 \
          ${params.cellbender.total_droplets_included} \
-         --filtered_h5 ${filtered_path}
+         --filtered ${filtered_path}
       """
        
    else
@@ -26,8 +26,8 @@ process CELLBENDER {
       export CUDA_VISIBLE_DEVICES=$gpu_index
       python ${baseDir}/bin/run_cellbender.py \
          ${raw_path} \
-         ${name}_cellbender.h5ad \
+         ${name}_cellbender.h5 \
          ${params.cellbender.total_droplets_included} \
-         --filtered_h5 ${filtered_path}
+         --filtered ${filtered_path}
       """
 }

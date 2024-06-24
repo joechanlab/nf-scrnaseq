@@ -22,7 +22,7 @@ def kneepoint(vec):
     idxOfBestPoint = np.argmax(distToLine)
     return idxOfBestPoint
 
-def RunPCA(cts, var_threshold, n_components=300):
+def RunPCA(cts, var_threshold, n_components):
     pca = PCA(n_components=n_components, svd_solver='randomized')
     pca.fit(cts)
     num_components = 0
