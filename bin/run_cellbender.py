@@ -15,8 +15,8 @@ args = parser.parse_args()
 
 # estimate of number of cells from cellranger
 expected_cells = 0
-for idx, h5_file_path in enumerate(args.inputs, start=1):
-    adata_filtered = load_anndata_from_input(args.filtered_h5)
+for idx, h5_file_path in enumerate(args.filtered_h5, start=1):
+    adata_filtered = load_anndata_from_input(h5_file_path)
     expected_cells += adata_filtered.shape[0]
 
 command = f"""

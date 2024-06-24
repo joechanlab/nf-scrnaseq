@@ -7,6 +7,7 @@ include {DOUBLETDETECTION} from './modules/doubletdetection'
 include {AGGREGATION} from './modules/aggregation'
 include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
+include {POSTPROCESSING} from './modules/postprocessing'
 
 workflow {
     // access the samplesheet
@@ -19,7 +20,7 @@ workflow {
     ch_input = Channel.from(sample_sheet_data).map { row ->
         def name = row[0]
         def raw_path = file(row[1])
-        def filtered_path = file(row[2])
+        def filtered_path = row[2]
         return tuple(name, raw_path, filtered_path)
     }
     
@@ -37,4 +38,7 @@ workflow {
     
     // SCVI batch correction
     SCVI(SCRAN.out.scran_h5ad)
+    
+    // Postprocessing
+    POSTPROCESSING(SCVI.out.scvi_h5ad)
 }

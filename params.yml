@@ -1,5 +1,5 @@
-samplesheet: "/data/chanjlab/wangm10/nf-scrnaseq/data/oliver_RPMN_2024_samplesheet.csv"
-outdir: "/data/chanjlab/oliver_RPMN_2024"
+samplesheet: "./data/sampleSheet.csv"
+outdir: "../results-cellbender-test/"
 cellbender:
     total_droplets_included: 2000
 aggregation:
