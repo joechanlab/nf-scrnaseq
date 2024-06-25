@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.2.2"
+    hooks:
+      - id: ruff # linter
+        args: [--fix, --exit-non-zero-on-fix] # sort imports and fix
+      - id: ruff-format # formatter
+
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: "2.7.3"
+    hooks:
+      - id: editorconfig-checker
+        alias: ec
+
