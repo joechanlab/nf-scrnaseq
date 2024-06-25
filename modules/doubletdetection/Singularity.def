@@ -8,7 +8,6 @@ From: python:3.8-slim
 
 %environment
     export NUMBA_CACHE_DIR=/tmp/numba_cache
-    
+
 %runscript
     exec python "$@"
-

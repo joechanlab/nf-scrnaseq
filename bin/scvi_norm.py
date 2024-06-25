@@ -22,9 +22,9 @@ adata.obs['sample_name'] = adata.obs['sample_name'].astype('category')
 
 sc.pp.highly_variable_genes(
     adata,
-    n_top_genes=args.n_top_genes, 
+    n_top_genes=args.n_top_genes,
     subset=True,
-    flavor="seurat", 
+    flavor="seurat",
     batch_key="sample_name"
 )
 
@@ -48,5 +48,5 @@ denoised = model.get_normalized_expression(adata, library_size=1e4)
 adata.layers["scvi_normalized"] = model.get_normalized_expression(
     library_size=10e4
 )
-        
+
 adata.write_h5ad(args.output)

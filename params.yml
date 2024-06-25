@@ -10,7 +10,7 @@ aggregation:
     mito_frac: 1
 scvi:
     n_latent: 10
-    n_top_genes: 10 
+    n_top_genes: 10
 postproessing:
     n_pca_components: 3
     n_diffmap_components: 3

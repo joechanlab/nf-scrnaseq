@@ -7,7 +7,7 @@ A bioinformatics pipeline that preprocesses single-cell RNA-seq data. It takes a
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-First, prepare a samplesheet with your input data that looks as follows, where each row contains the sample name, a raw count HDF5 file and a filtered count HDF5 file from CellRanger. 
+First, prepare a samplesheet with your input data that looks as follows, where each row contains the sample name, a raw count HDF5 file and a filtered count HDF5 file from CellRanger.
 
 `samplesheet.csv`:
 ```csv
@@ -24,7 +24,7 @@ outdir: "./out/"                      # directory containing the outputs
 cellbender:                           # cellbender parameters (see bin/cellbender.py)
     total_droplets_included: 50000
 aggregation:                          # qc summary and filter parameters (see bin/aggregation.py)
-    percent_top: "50,100,150,200" 
+    percent_top: "50,100,150,200"
     total_counts: 500
     n_genes_by_counts: 400
     log10GenesPerUMI: 0.8
@@ -49,7 +49,7 @@ nextflow run ./main.nf \
    -w ./work/
 ```
 
-If you are using MSKCC lilac, you can use the pre-defined `lilac` profile that uses the LSF executor. 
+If you are using MSKCC lilac, you can use the pre-defined `lilac` profile that uses the LSF executor.
 ```bash
 nextflow run ./main.nf \
    -profile lilac \
