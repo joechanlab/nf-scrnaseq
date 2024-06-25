@@ -31,7 +31,7 @@ sc.pp.log1p(adata, base=2)
 adata.obs["sample_name"] = adata.obs["sample_name"].astype("category")
 
 sc.pp.highly_variable_genes(
-    adata, n_top_genes=args.n_top_genes, flavor="seurat_v3", batch_key="sample_name"
+    adata, n_top_genes=args.n_top_genes, flavor="seurat", batch_key="sample_name"
 )
 
 adata_hvg = adata[:, adata.var["highly_variable"]].copy()
