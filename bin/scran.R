@@ -1,8 +1,8 @@
 # Load libraries
 suppressMessages({library(scran)
-                  library(zellkonverter)
-                  library(scater)
-                 })
+    library(zellkonverter)
+    library(scater)
+    })
 args <- commandArgs(trailingOnly = TRUE)
 
 # Load DGC matrix file and metadata

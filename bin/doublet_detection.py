@@ -33,7 +33,7 @@ if args.filtered_h5 != '':
 
     adata_sample_barcodes = set(adata_sample_barcodes)
     adata_batch_barcodes = set(adata_batch.obs_names)
-    
+
     # Find the common barcodes between sample and batch
     common_barcodes = adata_sample_barcodes.intersection(adata_batch_barcodes)
 
@@ -62,25 +62,3 @@ adata_batch.obs["doublet"] = doublets
 adata_batch.obs["doublet_score"] = doublet_score
 
 adata_batch.write_h5ad(args.output_h5ad)
-
-# Save convergence plot with sample name
-# f = doubletdetection.plot.convergence(clf, save = f"{args.outdir}/{sample_name}.convergence_test.pdf", show=True, p_thresh=1e-7, voter_thresh=0.8)
-
-# sc.pp.normalize_total(adata_batch)
-# sc.pp.log1p(adata_batch)
-# sc.pp.highly_variable_genes(adata_batch)
-# sc.tl.pca(adata_batch)
-# sc.pp.neighbors(adata_batch)
-# sc.tl.umap(adata_batch)
-
-# Save UMAP plot with sample name
-# umap_plot_file = f"{args.outdir}/{sample_name}_umap_doublets.png"
-# sc.pl.umap(adata_batch, color=["doublet", "doublet_score"], save = umap_plot_file)
-
-# Save violin plot with sample name
-# violin_plot_file = f"{args.outdir}/{sample_name}_violin_doublets.png"
-# sc.pl.violin(adata_batch, "doublet_score", save = violin_plot_file)
-
-# Save threshold plot with sample name
-# threshold_plot_file = f"{args.outdir}/{sample_name}_threshold_test.pdf"
-# f3 = doubletdetection.plot.threshold(clf, save = threshold_plot_file, show=True, p_step=6)

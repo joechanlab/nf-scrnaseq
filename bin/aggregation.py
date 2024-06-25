@@ -25,7 +25,7 @@ for idx, h5_file_path in enumerate(args.inputs, start=1):
     adata.obs.index = adata.obs['sample_name'] + "_" + adata.obs.index
     adata.var_names_make_unique()
     adata_list.append(adata)
-    
+
 combined_adata = sc.concat(adata_list, axis = 0, join = 'outer')
 
 # QC

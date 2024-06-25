@@ -6,7 +6,7 @@ import scipy.sparse as sp
 from typing import Dict
 
 def get_basename_without_extension(path):
-    basename = os.path.basename(path) 
+    basename = os.path.basename(path)
     basename_without_extension = os.path.splitext(basename)[0]
     return basename_without_extension
 
