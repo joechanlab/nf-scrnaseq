@@ -5,9 +5,9 @@ import argparse
 import torch
 
 parser = argparse.ArgumentParser(
-    description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
-parser.add_argument("-i", "--input", required=True, default="", help="The input h5ad file")
-parser.add_argument("-o", "--output", required=True, help="The output h5ad file")
+    description="wrapper for running SCVI on transcriptomic data.")
+parser.add_argument("input", help="The input h5ad file")
+parser.add_argument("output", help="The output h5ad file")
 parser.add_argument("--n_latent", default=10, type=int, required=False, help="Number of latent dimensions.")
 parser.add_argument("--n_top_genes", default=1000, type=int, required=False, help="Number of top genes.")
 
@@ -16,14 +16,14 @@ args = parser.parse_args()
 torch.set_float32_matmul_precision("high")
 
 adata = sc.read_h5ad(args.input)
-adata.layers["counts"] = adata.X
+adata.layers["X_scran"] = adata.X
 adata.raw = adata
+sc.pp.log1p(adata, base=2)
 
 adata.obs["sample_name"] = adata.obs["sample_name"].astype("category")
 
 sc.pp.highly_variable_genes(
     adata,
-    layer="counts",
     n_top_genes=args.n_top_genes,
     flavor="seurat_v3", 
     batch_key="sample_name"
@@ -33,7 +33,6 @@ adata_hvg = adata[:, adata.var["highly_variable"]].copy()
 
 scvi.model.SCVI.setup_anndata(
     adata_hvg,
-    layer="counts",
     batch_key="sample_name",
     continuous_covariate_keys=["mito_frac"]
 )
