@@ -1,5 +1,5 @@
 samplesheet: "./data/sampleSheet.csv"
-outdir: "../results-cellbender-test/"
+outdir: "../results-nf-scrnaseq/"
 cellbender:
     total_droplets_included: 2000
 aggregation:
@@ -11,7 +11,7 @@ aggregation:
 scvi:
     n_latent: 10
     n_top_genes: 10
-postproessing:
+postprocessing:
     n_pca_components: 3
     n_diffmap_components: 3
 with_gpu: true

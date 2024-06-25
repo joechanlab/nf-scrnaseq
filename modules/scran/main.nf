@@ -9,7 +9,7 @@ process SCRAN {
     output:
     path "scran.h5ad", emit: scran_h5ad
 
-    script:
+    script: // set home directory to cache basilisk
     """
     export PATH=/opt/conda/envs/scran/bin/:$PATH
     export HOME=${workDir}
