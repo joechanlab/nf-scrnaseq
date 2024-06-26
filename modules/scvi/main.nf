@@ -5,7 +5,7 @@ process SCVI {
     publishDir "${params.outdir}/scvi/", mode: 'copy'
 
     input:
-    file scran_h5ad
+    path scran_h5ad
 
     output:
     path "scvi.h5ad", emit: scvi_h5ad
