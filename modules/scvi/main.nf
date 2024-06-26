@@ -1,10 +1,11 @@
 process SCVI {
-    label 'process_single'
+    label 'gpus'
     container "library://mamie_wang/nf-scrnaseq/scvi.sif:latest"
+    containerOptions '--nv'
     publishDir "${params.outdir}/scvi/", mode: 'copy'
 
     input:
-    file scran_h5ad
+    path scran_h5ad
 
     output:
     path "scvi.h5ad", emit: scvi_h5ad

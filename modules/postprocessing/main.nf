@@ -4,7 +4,7 @@ process POSTPROCESSING {
     publishDir "${params.outdir}/postprocessing/", mode: 'copy'
 
     input:
-    file scvi_h5ad
+    path scvi_h5ad
 
     output:
     path "postprocessing.h5ad", emit: postprocessing_h5ad
@@ -15,6 +15,6 @@ process POSTPROCESSING {
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
         postprocessing.h5ad \
-        --n_pca_components ${params.postprocessing.n_pca_components}
+        --n_pca_components ${params.postprocessing.n_pca_components} || true
     """
 }

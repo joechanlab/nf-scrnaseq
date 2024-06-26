@@ -31,7 +31,7 @@ aggregation:                          # qc summary and filter parameters (see bi
     mito_frac: 0.2
 scvi:                                 # scvi parameters (see bin/scvi_norm.py)
     n_latent: 50
-    n_top_genes: 5000
+    n_top_genes: 1000                 # note: large values might give error in writing h5ad
 postprocessing:                       # postprocessing parameters (see bin/postprocessing.py)
    n_pca_components: 100
 with_gpu: true                        # using GPU

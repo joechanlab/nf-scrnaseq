@@ -25,7 +25,6 @@ torch.set_float32_matmul_precision("high")
 
 adata = sc.read_h5ad(args.input)
 adata.layers["X_scran"] = adata.X
-adata.raw = adata
 sc.pp.log1p(adata, base=2)
 
 adata.obs["sample_name"] = adata.obs["sample_name"].astype("category")

@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import numpy.matlib
 from sklearn.decomposition import PCA
-import phenograph
 import scanpy as sc
 
 
@@ -106,19 +105,7 @@ adata.uns["var_explained"] = var_explained
 NEAREST NEIGHBORS
 """
 print("Performing nearest neighbors")
-
 sc.pp.neighbors(adata, n_neighbors=args.n_neighbors, n_pcs=pca_merge.shape[1])
-
-"""
-CLUSTERING
-"""
-print("Phenograph Clustering")
-clusters_merge, _, _ = phenograph.cluster(pca_merge, k=args.n_neighbors)
-clusters_merge = pd.Series(clusters_merge, pca_merge.index)
-
-adata.obs["phenograph"] = (
-    clusters_merge.loc[adata.obs_names].astype("str").astype("category")
-)
 
 """
 LEIDEN CLUSTERING
@@ -130,7 +117,7 @@ sc.tl.leiden(adata, resolution=args.leiden_res)
 UMAP
 """
 print("Performing UMAP")
-sc.tl.paga(adata, groups="phenograph")
+sc.tl.paga(adata, groups="leiden")
 sc.pl.paga(adata, plot=False)
 sc.tl.umap(adata, init_pos="paga", min_dist=args.umap_min_dist)
 
@@ -144,6 +131,12 @@ sc.tl.diffmap(adata, n_comps=args.n_diffmap_components)
 DEG
 """
 print("Performing DEG")
-sc.tl.rank_genes_groups(adata, groupby="phenograph", method="wilcoxon")
+sc.tl.rank_genes_groups(adata, groupby="leiden", method="wilcoxon")
 
+"""
+Save H5AD
+"""
+print("Write H5AD")
 adata.write_h5ad(args.output_h5ad)
+
+print(f"Wrote H5AD as {args.output_h5ad}")
