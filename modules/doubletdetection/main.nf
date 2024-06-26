@@ -4,8 +4,9 @@ process DOUBLETDETECTION {
     publishDir "${params.outdir}/doubletdetection/", mode: 'copy'
 
     input:
-    tuple val(name), path(raw_path), path(filtered_path)
+    val name
     path cellbender_h5
+    val filtered_path
 
     output:
     path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
