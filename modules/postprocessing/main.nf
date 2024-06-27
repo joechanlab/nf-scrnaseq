@@ -1,5 +1,5 @@
 process POSTPROCESSING {
-    label 'process_single'
+    label 'process_low'
     container "library://mamie_wang/nf-scrnaseq/postprocessing.sif:latest"
     publishDir "${params.outdir}/postprocessing/", mode: 'copy'
 

@@ -17,13 +17,6 @@ parser.add_argument("output_h5ad", help="The output path.")
 parser.add_argument(
     "--sample_col", default="sample_name", help="The sample column name."
 )
-parser.add_argument(
-    "--percent_top",
-    required=False,
-    type=str,
-    default="50,100,200,500",
-    help="Total count threshold.",
-)
 args = parser.parse_args()
 
 
@@ -152,9 +145,7 @@ adata = sc.read_h5ad(args.input_h5ad)
 # Mark mitochondrial and ribosomal genes; calculate QC metrics
 adata.var["mito"] = adata.var_names.str.upper().str.startswith(("MT-"))
 adata.var["ribo"] = adata.var_names.str.upper().str.startswith(("RPS", "RPL"))
-sc.pp.calculate_qc_metrics(
-    adata, percent_top=tuple(map(int, args.percent_top.split(","))), inplace=True
-)
+sc.pp.calculate_qc_metrics(adata, percent_top=[20], inplace=True)
 sc.pp.calculate_qc_metrics(
     adata, qc_vars=["ribo", "mito"], percent_top=None, log1p=False, inplace=True
 )

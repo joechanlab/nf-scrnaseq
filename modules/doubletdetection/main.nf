@@ -1,5 +1,5 @@
 process DOUBLETDETECTION {
-    label 'process_single'
+    label 'process_low'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     publishDir "${params.outdir}/doubletdetection/", mode: 'copy'
 
