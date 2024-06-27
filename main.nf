@@ -5,6 +5,7 @@ nextflow.enable.dsl = 2
 include {CELLBENDER} from './modules/cellbender'
 include {DOUBLETDETECTION} from './modules/doubletdetection'
 include {AGGREGATION} from './modules/aggregation'
+include {OUTLIER_FILTER} from './modules/outlierfilter'
 include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
@@ -33,8 +34,11 @@ workflow {
     // aggregate the outputs
     AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect().map { files -> tuple(files) })
 
+    // filter out outliers
+    OUTLIER_FILTER(AGGREGATION.out.aggregation_h5ad)
+
     // SCRAN normalization
-    SCRAN(AGGREGATION.out.aggregation_h5ad)
+    SCRAN(OUTLIER_FILTER.out.outlier_filtered_h5ad)
 
     // SCVI batch correction
     SCVI(SCRAN.out.scran_h5ad)
