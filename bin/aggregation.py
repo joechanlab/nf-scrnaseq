@@ -1,6 +1,5 @@
 import argparse
 import scanpy as sc
-import numpy as np
 from utils import get_basename_without_extension
 
 parser = argparse.ArgumentParser(description="wrapper for concatenating the samples.")

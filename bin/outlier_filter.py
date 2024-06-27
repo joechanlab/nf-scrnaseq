@@ -145,13 +145,16 @@ def designate_outliers(
         )
     adata.obs[key_added] = adata.obs[key_added].astype(bool)
 
+
 # Load data
 adata = sc.read_h5ad(args.input_h5ad)
 
 # Mark mitochondrial and ribosomal genes; calculate QC metrics
 adata.var["mito"] = adata.var_names.str.upper().str.startswith(("MT-"))
 adata.var["ribo"] = adata.var_names.str.upper().str.startswith(("RPS", "RPL"))
-sc.pp.calculate_qc_metrics(adata, percent_top=tuple(map(int, args.percent_top.split(","))), inplace=True)
+sc.pp.calculate_qc_metrics(
+    adata, percent_top=tuple(map(int, args.percent_top.split(","))), inplace=True
+)
 sc.pp.calculate_qc_metrics(
     adata, qc_vars=["ribo", "mito"], percent_top=None, log1p=False, inplace=True
 )
@@ -161,7 +164,7 @@ calculate_group_featcount_dist(adata, group_key=args.sample_col)
 designate_outliers(adata, condition=default_filter, group_key=args.sample_col)
 
 # Remove outliers
-adata = adata[~adata.obs.outlier,:]
+adata = adata[~adata.obs.outlier, :]
 
 # Filter genes
 sc.pp.filter_genes(adata, min_cells=1)
