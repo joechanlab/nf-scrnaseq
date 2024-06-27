@@ -29,7 +29,7 @@ workflow {
     CELLBENDER(ch_input)
 
     // run DoubletDetection
-    DOUBLETDETECTION(ch_input, CELLBENDER.out.cellbender_h5)
+    DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.cellbender_h5, CELLBENDER.out.filtered_path)
 
     // aggregate the outputs
     AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect().map { files -> tuple(files) })

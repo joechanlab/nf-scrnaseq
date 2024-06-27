@@ -8,7 +8,9 @@ process CELLBENDER {
     tuple val(name), path(raw_path), val(filtered_path)
 
     output:
+    val "${name}", emit: name
     path "${name}_cellbender.h5", emit: cellbender_h5
+    val "${filtered_path}", emit: filtered_path
 
     script:
     def gpu_index = task.index % params.maxForks

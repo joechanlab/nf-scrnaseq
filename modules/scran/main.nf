@@ -7,7 +7,7 @@ process SCRAN {
     file aggregation_h5ad
 
     output:
-    path "scran.h5ad", emit: scran_h5ad
+    path "${params.experiment.name ? params.experiment.name + '_' : ''}scran.h5ad", emit: scran_h5ad
 
     script: // set home directory to cache basilisk
     """
@@ -15,6 +15,6 @@ process SCRAN {
     export HOME=${workDir}
     Rscript ${baseDir}/bin/scran.R \
         ${aggregation_h5ad} \
-        scran.h5ad
+        "${params.experiment.name ? params.experiment.name + '_' : ''}scran.h5ad"
     """
 }

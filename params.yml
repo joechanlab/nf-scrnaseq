@@ -1,5 +1,7 @@
 samplesheet: "./data/sampleSheet.csv"
 outdir: "../results-nf-scrnaseq/"
+experiment:
+    name: "toy_data"
 cellbender:
     total_droplets_included: 2000
 aggregation:
