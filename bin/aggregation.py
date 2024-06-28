@@ -1,5 +1,6 @@
 import argparse
 import scanpy as sc
+import numpy as np
 from utils import get_basename_without_extension
 
 parser = argparse.ArgumentParser(description="wrapper for concatenating the samples.")
@@ -23,5 +24,9 @@ for idx, h5_file_path in enumerate(args.inputs, start=1):
     adata_list.append(adata)
 
 combined_adata = sc.concat(adata_list, axis=0, join="outer")
+
+# Randomize the rows
+permuted_indices = np.random.permutation(combined_adata.n_obs)
+combined_adata = combined_adata[permuted_indices, :]
 
 combined_adata.write_h5ad(args.output)
