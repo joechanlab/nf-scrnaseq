@@ -32,7 +32,7 @@ workflow {
     DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.cellbender_h5, CELLBENDER.out.filtered_path)
 
     // aggregate the outputs
-    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect().map { files -> tuple(files) })
+    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
 
     // filter out outliers
     OUTLIER_FILTER(AGGREGATION.out.aggregation_h5ad)

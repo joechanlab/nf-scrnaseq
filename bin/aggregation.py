@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(description="wrapper for concatenating the samp
 parser.add_argument(
     "inputs", nargs="*", help="Paths to directory containing files to be concatenated."
 )
-parser.add_argument("output", help="The output h5ad file path.")
+parser.add_argument("--output", required=True, help="The output h5ad file path.")
 
 args = parser.parse_args()
 
