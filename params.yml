@@ -1,5 +1,5 @@
 samplesheet: "./data/sampleSheet.csv"
-outdir: "../results-nf-scrnaseq/"
+outdir: "../results-test/"
 experiment:
     name: "toy_data"
 cellbender:

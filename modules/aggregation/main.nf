@@ -1,18 +1,19 @@
 process AGGREGATION {
-    label 'process_single'
+    label 'process_low'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     publishDir "${params.outdir}/aggregation/", mode: 'copy'
 
     input:
-    tuple path(doublet_h5ad)
+    val doublet_h5ads
 
     output:
     path "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad", emit: aggregation_h5ad
 
     script:
+    joined_file_paths = doublet_h5ads.join(' ')
     """
     python ${baseDir}/bin/aggregation.py \
-        ${doublet_h5ad} \
-        "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad"
+        ${joined_file_paths} \
+        --output "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad"
     """
 }
