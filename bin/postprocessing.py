@@ -66,46 +66,53 @@ parser.add_argument(
 parser.add_argument(
     "--leiden_res", type=float, default=1.8, help="The resolution of Leiden clustering"
 )
+parser.add_argument(
+    "--use_scvi",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Use SCVI latent variable instead of PCA.",
+)
 args = parser.parse_args()
 
 adata = sc.read_h5ad(args.input_h5ad)
 
-norm_df = pd.DataFrame(
-    adata.X.toarray(), index=adata.obs_names, columns=adata.var_names
-)
-bad_genes = norm_df.columns.str.upper().str.contains(
-    "^MT-|^MTMR|^MTND|NEAT1|TMSB4X|TMSB10|^RPS|^RPL|^MRP|^FAU$|UBA52|MALAT"
-)
-norm_df = norm_df.loc[:, ~bad_genes]
+if not args.use_scvi:
+    norm_df = pd.DataFrame(
+        adata.X.toarray(), index=adata.obs_names, columns=adata.var_names
+    )
+    bad_genes = norm_df.columns.str.upper().str.contains(
+        "^MT-|^MTMR|^MTND|NEAT1|TMSB4X|TMSB10|^RPS|^RPL|^MRP|^FAU$|UBA52|MALAT"
+    )
+    norm_df = norm_df.loc[:, ~bad_genes]
 
-"""
-PCA
-"""
-print("Performing PCA")
-pca = PCA(n_components=args.n_pca_components, svd_solver="randomized")
-pca.fit(norm_df)
+    """
+    PCA
+    """
+    print("Performing PCA")
+    pca = PCA(n_components=args.n_pca_components, svd_solver="randomized")
+    pca.fit(norm_df)
 
-# By Kneepoint
-num_components = 0
-num_components = max(
-    num_components, kneepoint(np.cumsum(pca.explained_variance_ratio_))
-)
-print("# Components = %d" % (num_components + 1))
+    # By Kneepoint
+    num_components = 0
+    num_components = max(
+        num_components, kneepoint(np.cumsum(pca.explained_variance_ratio_))
+    )
+    print("# Components = %d" % (num_components + 1))
 
-var_explained = np.cumsum(pca.explained_variance_ratio_)[num_components]
-print("Variance explained = %f" % var_explained)
+    var_explained = np.cumsum(pca.explained_variance_ratio_)[num_components]
+    print("Variance explained = %f" % var_explained)
 
-pca = PCA(n_components=num_components, svd_solver="randomized")
-pca_merge = pd.DataFrame(pca.fit_transform(norm_df.values), index=norm_df.index)
-adata.obsm["X_pca"] = pca_merge.loc[adata.obs_names, :].values
-adata.uns["num_components"] = num_components
-adata.uns["var_explained"] = var_explained
-
-"""
-NEAREST NEIGHBORS
-"""
-print("Performing nearest neighbors")
-sc.pp.neighbors(adata, n_neighbors=args.n_neighbors, n_pcs=pca_merge.shape[1])
+    pca = PCA(n_components=num_components, svd_solver="randomized")
+    pca_merge = pd.DataFrame(pca.fit_transform(norm_df.values), index=norm_df.index)
+    adata.obsm["X_pca"] = pca_merge.loc[adata.obs_names, :].values
+    adata.uns["num_components"] = num_components
+    adata.uns["var_explained"] = var_explained
+    print("Performing nearest neighbors using PCA.")
+    sc.pp.neighbors(adata, n_neighbors=args.n_neighbors, n_pcs=pca_merge.shape[1])
+else:
+    print("Performing nearest neighbors using scVI latent variables.")
+    sc.pp.neighbors(adata, n_neighbors=args.n_neighbors, use_rep="X_scVI")
 
 """
 LEIDEN CLUSTERING

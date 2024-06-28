@@ -8,6 +8,7 @@ process POSTPROCESSING {
 
     output:
     path "${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing.h5ad", emit: postprocessing_h5ad
+    path "${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
 
     script:
     """
@@ -15,6 +16,10 @@ process POSTPROCESSING {
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
         ${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing.h5ad \
-        --n_pca_components ${params.postprocessing.n_pca_components} || true
+        --n_pca_components ${params.postprocessing.n_pca_components}
+    python ${baseDir}/bin/postprocessing.py \
+        ${scvi_h5ad} \
+        ${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing_scvi.h5ad \
+        --use_scvi
     """
 }
