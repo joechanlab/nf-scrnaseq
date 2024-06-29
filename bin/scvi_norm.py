@@ -1,6 +1,5 @@
 import scvi
 import scanpy as sc
-import numpy as np
 import argparse
 import torch
 
@@ -27,11 +26,6 @@ torch.set_float32_matmul_precision("high")
 adata = sc.read_h5ad(args.input)
 adata.layers["X_scran"] = adata.X
 sc.pp.log1p(adata, base=2)
-
-adata.obs["sample_name"] = adata.obs["sample_name"].astype("category")
-adata.obs["mito_frac"] = np.sum(adata[:, adata.var["mito"]].X, axis=1) / np.sum(
-    adata.X, axis=1
-)
 
 sc.pp.highly_variable_genes(
     adata, n_top_genes=args.n_top_genes, flavor="seurat", batch_key="sample_name"
