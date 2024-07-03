@@ -2,6 +2,8 @@
 
 A bioinformatics pipeline that preprocesses single-cell RNA-seq data. It takes a samplesheet and CellRanger raw filtered count matrix as input, performs ambient RNA correction, doublet detection, sample aggregation, batch integration.
 
+![nf-scrnaseq](docs/images/pipeline.png)
+
 ## Usage
 
 > [!NOTE]
