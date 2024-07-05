@@ -16,13 +16,17 @@ process CELLTYPIST {
         """
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
-            ${params.experiment.name}_celltypist_scvi.h5ad
+            ${params.experiment.name}_celltypist_scvi.h5ad \
+            --majority_voting \
+            --use_gpu
         """
     else
         """
         export CUDA_VISIBLE_DEVICES=$gpu_index
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
-            ${params.experiment.name}_celltypist_scvi.h5ad
+            ${params.experiment.name}_celltypist_scvi.h5ad \
+            --majority_voting \
+            --use_gpu
         """
 }

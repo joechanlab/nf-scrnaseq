@@ -18,9 +18,16 @@ parser.add_argument(
 parser.add_argument(
     "--majority_voting",
     type=bool,
-    default=True,
+    default=False,
     action=argparse.BooleanOptionalAction,
     help="Whether to use majority voting classifier.",
+)
+parser.add_argument(
+    "--use_gpu",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Whether to use GPU for annotaiton.",
 )
 
 args = parser.parse_args()
