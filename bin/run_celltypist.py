@@ -13,7 +13,7 @@ parser.add_argument(
     "--model",
     default="Human_Lung_Atlas.pkl",
     type=str,
-    help="Number of iterations to use; default is 50",
+    help="Type of model; default is Human_Lung_Atlas.pkl",
 )
 parser.add_argument(
     "--majority_voting",
@@ -41,10 +41,9 @@ print(f"Loaded {args.model}")
 predictions = celltypist.annotate(
     adata, model=model, majority_voting=args.majority_voting
 )
-print(f"Loaded {args.model}")
-
-adata = predictions.to_adata(insert_labels=True, insert_conf=True, insert_prob=True)
+print("Made predictions")
 
 # Write data
+adata = predictions.to_adata(insert_labels=True, insert_conf=True, insert_prob=True)
 adata.write_h5ad(args.output_h5ad)
 print(f"Wrote {args.output_h5ad}")
