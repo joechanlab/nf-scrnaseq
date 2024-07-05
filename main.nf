@@ -45,4 +45,7 @@ workflow {
 
     // Postprocessing
     POSTPROCESSING(SCVI.out.scvi_h5ad)
+
+    // Celltypist
+    CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
 }
