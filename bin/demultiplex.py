@@ -3,16 +3,14 @@ import scanpy.external as sce
 import argparse
 
 parser = argparse.ArgumentParser(description="Demultiplexing.")
-parser.add_argument(
-    "input", help="Paths to the h5ad file."
-)
+parser.add_argument("input", help="Paths to the h5ad file.")
 parser.add_argument("--output", required=True, help="The output h5ad file path.")
 
 args = parser.parse_args()
 
 adata = sc.read_h5ad(args.input)
 
-htos = adata[:, adata.var['feature_type'] == 'Multiplexing Capture'].var_names.tolist()
+htos = adata[:, adata.var["feature_type"] == "Multiplexing Capture"].var_names.tolist()
 
 # Copy HTO data to obs
 for hto in htos:
@@ -22,8 +20,8 @@ for hto in htos:
 sce.pp.hashsolo(
     adata,
     cell_hashing_columns=htos,
-    priors=[1./3., 1./3., 1./3.],
-    inplace=True
+    priors=[1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0],
+    inplace=True,
 )
 
 # Remove HTO data from obs
