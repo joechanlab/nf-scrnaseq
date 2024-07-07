@@ -9,6 +9,7 @@ include {OUTLIER_FILTER} from './modules/outlierfilter'
 include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
+include {CELLTYPIST} from './modules/celltypist'
 
 workflow {
     // access the samplesheet

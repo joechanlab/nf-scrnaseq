@@ -32,9 +32,15 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-# Read data (assuming normalized)
+# Read data
 adata = sc.read_h5ad(args.input_h5ad)
 print(f"Read {args.input_h5ad}")
+
+# Perform normalization required by celltypist
+adata.layers["scvi"] = adata.X
+adata.X = adata.layers["X_scran"]
+sc.pp.normalize_total(adata, target_sum=10**4)
+sc.pp.log1p(adata)
 
 # Download and download the model
 models.download_models(model=args.model)
