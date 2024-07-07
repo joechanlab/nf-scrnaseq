@@ -9,6 +9,7 @@ include {OUTLIER_FILTER} from './modules/outlierfilter'
 include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
+include {CELLTYPIST} from './modules/celltypist'
 
 workflow {
     // access the samplesheet
@@ -45,4 +46,7 @@ workflow {
 
     // Postprocessing
     POSTPROCESSING(SCVI.out.scvi_h5ad)
+
+    // Celltypist
+    CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
 }

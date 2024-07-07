@@ -89,7 +89,7 @@ doublets = clf.fit(adata_batch.X).predict(
 )
 doublet_score = clf.doublet_score()
 
-adata_batch.obs["doublet"] = doublets
+adata_batch.obs["doublet"] = doublets.astype(bool)
 adata_batch.obs["doublet_score"] = doublet_score
 
 adata_batch.write_h5ad(args.output_h5ad)
