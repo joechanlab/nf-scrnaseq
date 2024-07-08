@@ -29,6 +29,13 @@ parser.add_argument(
     action=argparse.BooleanOptionalAction,
     help="Whether to use GPU for annotaiton.",
 )
+parser.add_argument(
+    "--normalize",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Whether to normalize the data.",
+)
 
 args = parser.parse_args()
 
@@ -37,10 +44,11 @@ adata = sc.read_h5ad(args.input_h5ad)
 print(f"Read {args.input_h5ad}")
 
 # Perform normalization required by celltypist
-adata.layers["scvi"] = adata.X
-adata.X = adata.layers["X_scran"]
-sc.pp.normalize_total(adata, target_sum=10**4)
-sc.pp.log1p(adata)
+if args.normalize:
+    adata.layers["scvi"] = adata.X
+    adata.X = adata.layers["X_scran"]
+    sc.pp.normalize_total(adata, target_sum=10**4)
+    sc.pp.log1p(adata)
 
 # Download and download the model
 models.download_models(model=args.model)
