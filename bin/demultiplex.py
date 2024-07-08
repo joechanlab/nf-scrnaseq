@@ -1,14 +1,14 @@
-import scanpy as sc
 import scanpy.external as sce
+from utils import anndata_from_h5
 import argparse
 
 parser = argparse.ArgumentParser(description="Demultiplexing.")
-parser.add_argument("input", help="Paths to the h5ad file.")
+parser.add_argument("input", help="Paths to the raw h5ad file.")
 parser.add_argument("--output", required=True, help="The output h5ad file path.")
 
 args = parser.parse_args()
 
-adata = sc.read_h5ad(args.input)
+adata = anndata_from_h5(args.input)
 
 htos = adata[:, adata.var["feature_type"] == "Multiplexing Capture"].var_names.tolist()
 
