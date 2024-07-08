@@ -10,23 +10,26 @@ args = parser.parse_args()
 
 adata = anndata_from_h5(args.input)
 
-htos = adata[:, adata.var["feature_type"] == "Multiplexing Capture"].var_names.tolist()
+multiplexed = adata.var["feature_type"] == "Multiplexing Capture"
 
-# Copy HTO data to obs
-for hto in htos:
-    adata.obs[hto] = adata[:, adata.var_names == hto].X.toarray()
+if sum(multiplexed) > 0:
+    htos = adata[:, multiplexed].var_names.tolist()
 
-# Use flat prior for pre-QC data
-sce.pp.hashsolo(
-    adata,
-    cell_hashing_columns=htos,
-    priors=[1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0],
-    inplace=True,
-)
+    # Copy HTO data to obs
+    for hto in htos:
+        adata.obs[hto] = adata[:, adata.var_names == hto].X.toarray()
 
-# Remove HTO data from obs
-for hto in htos:
-    del adata.obs[hto]
+    # Use flat prior for pre-QC data
+    sce.pp.hashsolo(
+        adata,
+        cell_hashing_columns=htos,
+        priors=[1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0],
+        inplace=True,
+    )
+
+    # Remove HTO data from obs
+    for hto in htos:
+        del adata.obs[hto]
 
 # Save file with all HashSolo info
 adata.write_h5ad(args.output)
