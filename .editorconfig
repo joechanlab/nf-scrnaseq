@@ -19,6 +19,6 @@ insert_final_newline = unset
 trim_trailing_whitespace = false
 
 # ignore python and markdown
-[*.{py,md}]
+[*.{py,md,ipynb}]
 indent_style = unset
 

@@ -47,7 +47,10 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Read batch data
-adata_batch = anndata_from_h5(args.input_h5)
+if "h5ad" in args.input_h5:
+    adata_batch = sc.read_h5ad(args.input_h5)
+else:
+    adata_batch = anndata_from_h5(args.input_h5)
 
 if args.filtered_h5 != "":
     print(args.filtered_h5)

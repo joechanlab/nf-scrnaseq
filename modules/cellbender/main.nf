@@ -5,12 +5,13 @@ process CELLBENDER {
     publishDir "${params.outdir}/cellbender/", mode: 'copy'
 
     input:
-    tuple val(name), path(raw_path), val(filtered_path)
+    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing)
 
     output:
     val "${name}", emit: name
-    path "${name}_cellbender.h5", emit: cellbender_h5
+    path "${name}_cellbender.h5", emit: raw_h5
     val "${filtered_path}", emit: filtered_path
+    val "${demultiplexing}", emit: demultiplexing
 
     script:
     def gpu_index = task.index % params.maxForks

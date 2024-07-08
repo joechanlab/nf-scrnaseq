@@ -10,6 +10,7 @@ include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
 include {CELLTYPIST} from './modules/celltypist'
+include {REPORT} from './modules/report'
 
 workflow {
     // access the samplesheet
@@ -23,14 +24,15 @@ workflow {
         def name = row[0]
         def raw_path = file(row[1])
         def filtered_path = row[2]
-        return tuple(name, raw_path, filtered_path)
+        def demultiplexing = row[3].toBoolean()
+        return tuple(name, raw_path, filtered_path, demultiplexing)
     }
 
     // run Cellbender
     CELLBENDER(ch_input)
 
-    // run DoubletDetection
-    DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.cellbender_h5, CELLBENDER.out.filtered_path)
+    // run DoubletDetection with optional demultiplexing
+    DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.raw_h5, CELLBENDER.out.filtered_path, CELLBENDER.out.demultiplexing)
 
     // aggregate the outputs
     AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
@@ -49,4 +51,8 @@ workflow {
 
     // Celltypist
     CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
+
+    // Report
+    REPORT(POSTPROCESSING.out.postprocessing_h5ad,
+    CELLTYPIST.out.celltypist_scvi_h5ad)
 }
