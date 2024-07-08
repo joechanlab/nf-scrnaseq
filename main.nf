@@ -10,6 +10,7 @@ include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
 include {CELLTYPIST} from './modules/celltypist'
+include {REPORT} from './modules/report'
 
 workflow {
     // access the samplesheet
@@ -49,4 +50,8 @@ workflow {
 
     // Celltypist
     CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
+
+    // Report
+    REPORT(POSTPROCESSING.out.postprocessing_h5ad,
+    CELLTYPIST.out.celltypist_scvi_h5ad)
 }
