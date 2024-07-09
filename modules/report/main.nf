@@ -8,7 +8,8 @@ process REPORT {
     path celltypist_scvi_h5ad
 
     output:
-    path "${params.experiment.name}_report.html", emit: report_html
+    path "${params.experiment.name}_QC_report.html", emit: report_html
+    path "${params.experiment.name}_leiden_report.html", emit: report_html
 
     script:
     """
@@ -17,7 +18,9 @@ process REPORT {
     fi
     export HOME=/tmp/ipykernel
     python -m ipykernel install --user --name postprocessing
-    papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_report.ipynb
-    jupyter nbconvert --to html ${params.experiment.name}_report.ipynb
+    papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_QC_report.ipynb
+    jupyter nbconvert --to html ${params.experiment.name}_QC_report.ipynb
+    papermill ${baseDir}/bin/leiden_resolution_plot.ipynb ${params.experiment.name}_leiden_report.ipynb
+    jupyter nbconvert --to html ${params.experiment.name}_leiden_report.ipynb
     """
 }
