@@ -9,6 +9,7 @@ include {OUTLIER_FILTER} from './modules/outlierfilter'
 include {SCRAN} from './modules/scran'
 include {SCVI} from './modules/scvi'
 include {POSTPROCESSING} from './modules/postprocessing'
+include {LEIDEN_RESOLUTION} from './modules/leiden_resolution'
 include {CELLTYPIST} from './modules/celltypist'
 include {REPORT} from './modules/report'
 
@@ -51,6 +52,9 @@ workflow {
 
     // Celltypist
     CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
+
+    // Leiden resolution search
+    LEIDEN_RESOLUTION(POSTPROCESSING.out.postprocessing_scvi_h5ad)
 
     // Report
     REPORT(POSTPROCESSING.out.postprocessing_h5ad,
