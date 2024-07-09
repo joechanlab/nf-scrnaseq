@@ -2,6 +2,7 @@ import argparse
 import itertools
 import scanpy as sc
 import pandas as pd
+import numpy as np
 
 from scipy.sparse.csgraph import connected_components
 from sklearn.metrics import adjusted_rand_score, silhouette_score, calinski_harabasz_score
@@ -85,6 +86,13 @@ parser.add_argument("output", help="The path to the output directory")
 parser.add_argument(
     "--res_range", type=str, default="0.25,0.5,0.75,1,1.25", help="Resolution to check."
 )
+parser.add_argument(
+    "--use_scvi",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Use SCVI latent variable instead of PCA.",
+)
 args = parser.parse_args()
 
 if not args.use_scvi:
@@ -93,7 +101,7 @@ else:
     dim_red = "X_scvi"
 
 adata = sc.read_h5ad(args.input)
-rlist = args.res_range
+rlist = ",".split(args.res_range)[0]
 for r in rlist:
     for k in range(10, 101, 5):
         with contextlib.redirect_stdout(None):
@@ -102,6 +110,6 @@ for r in rlist:
 compute_ari_matrices(adata, rlist=rlist)
 
 print("Write H5AD")
-adata.write_h5ad(args.output_h5ad)
+adata.write_h5ad(args.output)
 
-print(f"Wrote H5AD as {args.output_h5ad}")
+print(f"Wrote H5AD as {args.output}")
