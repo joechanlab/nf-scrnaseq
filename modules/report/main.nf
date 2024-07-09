@@ -20,7 +20,5 @@ process REPORT {
     python -m ipykernel install --user --name postprocessing
     papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_QC_report.ipynb
     jupyter nbconvert --to html ${params.experiment.name}_QC_report.ipynb
-    papermill ${baseDir}/bin/leiden_resolution_plot.ipynb ${params.experiment.name}_leiden_report.ipynb
-    jupyter nbconvert --to html ${params.experiment.name}_leiden_report.ipynb
     """
 }
