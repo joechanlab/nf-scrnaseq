@@ -31,7 +31,7 @@ sc.pp.highly_variable_genes(
     adata,
     n_top_genes=args.n_top_genes,
     layer="counts",
-    flavor="seurat",
+    flavor="seurat_v3",
     batch_key="sample_name",
 )
 
