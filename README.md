@@ -2,6 +2,8 @@
 
 A bioinformatics pipeline that preprocesses single-cell RNA-seq data. It takes a samplesheet and CellRanger raw filtered count matrix as input, performs ambient RNA correction, doublet detection, sample aggregation, batch integration.
 
+![nf-scrnaseq](docs/images/pipeline.png)
+
 ## Usage
 
 > [!NOTE]
@@ -27,11 +29,13 @@ cellbender:                           # cellbender parameters (see bin/cellbende
     total_droplets_included: 50000
 scvi:                                 # scvi parameters (see bin/scvi_norm.py)
     n_latent: 50
-    n_top_genes: 1000                 # note: large values might give error in writing h5ad
-postprocessing:                       # postprocessing parameters (see bin/postprocessing.py)
+    n_top_genes: 1000                 # Note: large values might give error in writing h5ad
+postprocessing:                       # Postprocessing parameters (see bin/postprocessing.py)
    n_pca_components: 100
    n_diffmap_components: 20
    metadata: "./metadata.csv"         # path to metadata variables
+celltypist:
+    model: "Human_Lung_Atlas.pkl"     # model to use for celltypist
 report:
    plot: "./markers.csv"              # custom variables to plot
 with_gpu: true                        # using GPU
