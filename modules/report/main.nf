@@ -18,7 +18,7 @@ process REPORT {
     fi
     export HOME=/tmp/ipykernel
     python -m ipykernel install --user --name postprocessing
-    papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_report.ipynb
+    papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_report.ipynb -p plots ${params.report.plots}
     jupyter nbconvert --to html ${params.experiment.name}_report.ipynb
     """
 }
