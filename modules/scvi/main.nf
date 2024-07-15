@@ -1,6 +1,6 @@
 process SCVI {
     label 'gpus'
-    container "library://mamie_wang/nf-scrnaseq/scvi.sif:latest"
+    container "docker://scverse/scvi-tools:py3.11-cu12-tutorials-latest"
     containerOptions '--nv'
     publishDir "${params.outdir}/scvi/", mode: 'copy'
 
