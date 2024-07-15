@@ -16,6 +16,7 @@ process DOUBLETDETECTION {
     script:
     if(demultiplexing)
         """
+        export NUMBA_CACHE_DIR=/tmp/numba_cache
         python ${baseDir}/bin/demultiplex.py \
             ${cellbender_h5} \
             --output ${name}_hashsolo.h5ad
@@ -26,6 +27,7 @@ process DOUBLETDETECTION {
         """
     else
         """
+        export NUMBA_CACHE_DIR=/tmp/numba_cache
         python ${baseDir}/bin/doublet_detection.py \
             ${cellbender_h5} \
             ${name}_doubletdetection.h5ad \
