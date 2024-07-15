@@ -8,6 +8,7 @@ process REPORT {
     path celltypist_scvi_h5ad
 
     output:
+    path "${params.experiment.name}_report.ipynb", emit: report_ipynb
     path "${params.experiment.name}_report.html", emit: report_html
 
     script:
