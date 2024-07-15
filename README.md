@@ -37,6 +37,7 @@ report:
 with_gpu: true                        # using GPU
 maxForks: 2                           # maximum number of processes in parallel (e.g # of GPU)
 max_memory: "6.GB"                    # memory information
+max_time: "6.h"                       # wall time information
 max_cpus: 6                           # cpu information
 ```
 
