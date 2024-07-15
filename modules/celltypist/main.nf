@@ -20,7 +20,8 @@ process CELLTYPIST {
             ${params.experiment.name}_celltypist_scvi.h5ad \
             --model ${params.celltypist.model} \
             --majority_voting \
-            --use_gpu
+            --use_gpu \
+            --normalize
         """
     else
         """
@@ -31,6 +32,7 @@ process CELLTYPIST {
             ${params.experiment.name}_celltypist_scvi.h5ad \
             --model ${params.celltypist.model} \
             --majority_voting \
-            --use_gpu
+            --use_gpu \
+            --normalize
         """
 }
