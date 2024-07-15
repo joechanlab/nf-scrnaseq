@@ -32,6 +32,8 @@ postprocessing:                       # postprocessing parameters (see bin/postp
    n_pca_components: 100
    n_diffmap_components: 20
    metadata: "./metadata.csv"         # path to metadata variables
+celltypist:
+    model: "Human_Lung_Atlas.pkl"     # model to use for celltypist
 report:
    plot: "./markers.csv"              # custom variables to plot
 with_gpu: true                        # using GPU
