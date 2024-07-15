@@ -7,12 +7,12 @@ A bioinformatics pipeline that preprocesses single-cell RNA-seq data. It takes a
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-First, prepare a samplesheet with your input data that looks as follows, where each row contains the sample name, a raw count HDF5 file and a filtered count HDF5 file from CellRanger.
+First, prepare a samplesheet with your input data that looks as follows, where each row contains the sample name, a raw count HDF5 file and a filtered count HDF5 file from CellRanger, and whether demultiplexing is needed.
 
 `samplesheet.csv`:
 ```csv
-sample,raw_h5, filtered_h5
-CONTROL_REP1,raw_feature_bc_matrix.h5,filtered_feature_bc_matrix.h5
+sample, raw_h5, filtered_h5, demultiplexing
+CONTROL_REP1, raw_feature_bc_matrix.h5, filtered_feature_bc_matrix.h5, false
 ```
 
 Next, prepare a parameter YAML file that looks as follows:
@@ -21,19 +21,19 @@ Next, prepare a parameter YAML file that looks as follows:
 ```yaml
 samplesheet: "./samplesheet.csv"      # path to the sample sheet
 outdir: "./out/"                      # directory containing the outputs
+experiment:
+    name: "experiment"                # experiment name for prefix
 cellbender:                           # cellbender parameters (see bin/cellbender.py)
     total_droplets_included: 50000
-aggregation:                          # qc summary and filter parameters (see bin/aggregation.py)
-    percent_top: "50,100,150,200"
-    total_counts: 500
-    n_genes_by_counts: 400
-    log10GenesPerUMI: 0.8
-    mito_frac: 0.2
 scvi:                                 # scvi parameters (see bin/scvi_norm.py)
     n_latent: 50
     n_top_genes: 1000                 # note: large values might give error in writing h5ad
 postprocessing:                       # postprocessing parameters (see bin/postprocessing.py)
    n_pca_components: 100
+   n_diffmap_components: 20
+   metadata: "./metadata.csv"         # path to metadata variables
+report:
+   plot: "./markers.csv"              # custom variables to plot
 with_gpu: true                        # using GPU
 maxForks: 2                           # maximum number of processes in parallel (e.g # of GPU)
 max_memory: "6.GB"                    # memory information
