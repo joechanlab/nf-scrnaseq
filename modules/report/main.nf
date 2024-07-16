@@ -13,10 +13,7 @@ process REPORT {
 
     script:
     """
-    if [ ! -d "/tmp/ipykernel" ]; then
-        mkdir -p "/tmp/ipykernel"
-    fi
-    export HOME=/tmp/ipykernel
+    export HOME=${workDir}
     python -m ipykernel install --user --name postprocessing
     papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_report.ipynb -p plots ${params.report.plots}
     jupyter nbconvert --to html ${params.experiment.name}_report.ipynb

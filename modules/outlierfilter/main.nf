@@ -11,7 +11,7 @@ process OUTLIER_FILTER {
 
     script:
     """
-    export NUMBA_CACHE_DIR=/tmp/numba_cache
+    export NUMBA_CACHE_DIR=${workDir}
     python ${baseDir}/bin/outlier_filter.py \
         ${aggregation_h5ad} \
         ${params.experiment.name ? params.experiment.name + '_' : ''}outlier_filtered.h5ad
