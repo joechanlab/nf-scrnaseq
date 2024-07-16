@@ -1,5 +1,5 @@
 process OUTLIER_FILTER {
-    label 'process_low'
+    label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/postprocessing.sif:latest'
     publishDir "${params.outdir}/outlier_filtered/", mode: 'copy'
 

@@ -1,5 +1,5 @@
 process AGGREGATION {
-    label 'process_low'
+    label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     publishDir "${params.outdir}/aggregation/", mode: 'copy'
 
