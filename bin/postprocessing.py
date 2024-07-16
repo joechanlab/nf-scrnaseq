@@ -74,13 +74,13 @@ parser.add_argument(
     help="Use SCVI latent variable instead of PCA.",
 )
 parser.add_argument(
-    "--metadata", required=False, default="", help="Metadata to be added to obs."
+    "--metadata", required=False, default="None", help="Metadata to be added to obs."
 )
 args = parser.parse_args()
 
 adata = sc.read_h5ad(args.input_h5ad)
 
-if not args.metadata == "":
+if not args.metadata == "None":
     metadata = pd.read_csv(args.metadata)
     new_cols = [x for x in metadata.columns if x not in adata.obs.columns]
     intersect_cols = [x for x in metadata.columns if x in adata.obs.columns]
