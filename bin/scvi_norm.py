@@ -24,6 +24,8 @@ args = parser.parse_args()
 torch.set_float32_matmul_precision("high")
 
 adata = sc.read_h5ad(args.input)
+sc.pp.filter_genes(adata, min_cells=1)
+
 adata.layers["X_scran"] = adata.X
 sc.pp.log1p(adata, base=2)
 

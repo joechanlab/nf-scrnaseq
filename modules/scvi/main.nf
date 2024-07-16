@@ -12,7 +12,7 @@ process SCVI {
 
     script:
     """
-    export NUMBA_CACHE_DIR=/tmp/numba_cache
+    export NUMBA_CACHE_DIR=${workDir}
     python ${baseDir}/bin/scvi_norm.py \
         ${scran_h5ad} \
         ${params.experiment.name ? params.experiment.name + '_' : ''}scvi.h5ad \

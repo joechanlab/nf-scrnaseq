@@ -1,5 +1,5 @@
 process SCRAN {
-    label 'process_low'
+    label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/scran.sif:latest'
     publishDir "${params.outdir}/scran/", mode: 'copy'
 

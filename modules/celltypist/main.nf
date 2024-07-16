@@ -14,7 +14,7 @@ process CELLTYPIST {
     def gpu_index = task.index % params.maxForks
     if(task.executor == 'lsf')
         """
-        export NUMBA_CACHE_DIR=/tmp/numba_cache
+        export NUMBA_CACHE_DIR=${workDir}
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
             ${params.experiment.name}_celltypist_scvi.h5ad \
@@ -26,7 +26,7 @@ process CELLTYPIST {
     else
         """
         export CUDA_VISIBLE_DEVICES=$gpu_index
-        export NUMBA_CACHE_DIR=/tmp/numba_cache
+        export NUMBA_CACHE_DIR=${workDir}
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
             ${params.experiment.name}_celltypist_scvi.h5ad \
