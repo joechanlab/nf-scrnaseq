@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+import os
 import argparse
 import scanpy as sc
 import doubletdetection
 from utils import anndata_from_h5
+
+os.environ["NUMBA_CACHE_DIR"] = "/tmp/"
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data."

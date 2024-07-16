@@ -1,6 +1,9 @@
+import os
 import scanpy.external as sce
 from utils import anndata_from_h5
 import argparse
+
+os.environ["NUMBA_CACHE_DIR"] = "/tmp/"
 
 parser = argparse.ArgumentParser(description="Demultiplexing.")
 parser.add_argument("input", help="Paths to the raw h5ad file.")
