@@ -34,21 +34,21 @@ if sum(multiplexed) > 0:
     for hto in htos:
         del adata.obs[hto]
 
-# Save file with all HashSolo info
-adata.write_h5ad(args.output)
-
 # Filter cells and features
 # adata = adata[~adata.obs['Classification'].isin(['Doublet', 'Negative']), :].copy()
-# adata = adata[:, adata.var['feature_type'] != 'Multiplexing Capture'].copy()
+adata = adata[:, adata.var["feature_type"] != "Multiplexing Capture"].copy()
 
-# # Delete HashSolo info and save cleaned data
-# hashsolo_obs = [
-#     'most_likely_hypothesis', 'cluster_feature',
-#     'negative_hypothesis_probability', 'singlet_hypothesis_probability',
-#     'doublet_hypothesis_probability'
-# ]
+# Delete HashSolo info and save cleaned data
+hashsolo_obs = [
+    "most_likely_hypothesis",
+    "cluster_feature",
+    "negative_hypothesis_probability",
+    "singlet_hypothesis_probability",
+    "doublet_hypothesis_probability",
+]
 
-# for key in hashsolo_obs:
-#     del adata.obs[key]
+for key in hashsolo_obs:
+    del adata.obs[key]
 
-# adata.write_h5ad(FILTERED_OUTPUT_PATH)
+# Save file with all HashSolo info
+adata.write_h5ad(args.output)

@@ -81,6 +81,7 @@ args = parser.parse_args()
 adata = sc.read_h5ad(args.input_h5ad)
 
 if not args.metadata == "None":
+    print("Reading the metadata...")
     metadata = pd.read_csv(args.metadata)
     new_cols = [x for x in metadata.columns if x not in adata.obs.columns]
     intersect_cols = [x for x in metadata.columns if x in adata.obs.columns]
