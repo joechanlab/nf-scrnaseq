@@ -87,6 +87,7 @@ if not args.metadata == "None":
     intersect_cols = [x for x in metadata.columns if x in adata.obs.columns]
     metadata = adata.obs.merge(metadata, how="left", on=intersect_cols)
     assert metadata.shape[0] == adata.shape[0]
+    metadata.index = adata.obs.index
     for new_col in new_cols:
         adata.obs[new_col] = metadata[new_col]
 
