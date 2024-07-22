@@ -24,7 +24,7 @@ workflow {
         def name = row[0]
         def raw_path = file(row[1])
         def filtered_path = row[2]
-        def demultiplexing = row[3].toBoolean()
+        def demultiplexing = row[3].toLowerCase()
         return tuple(name, raw_path, filtered_path, demultiplexing)
     }
 
