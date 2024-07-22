@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 import scanpy as sc
 import celltypist
 from celltypist import models
@@ -50,13 +51,15 @@ if args.normalize:
     sc.pp.normalize_total(adata, target_sum=10**4)
     sc.pp.log1p(adata)
 
-# Download and download the model
-models.download_models(model=args.model)
-print(f"Downloaded {args.model} at {models.models_path}")
-
-# Load the model
-model = models.Model.load(model=args.model)
-print(f"Loaded {args.model}")
+# Check if the model path exists, if not
+if os.path.exists(args.model):
+    # Load the model
+    model = models.Model.load(model=args.model)
+    print(f"Loaded {args.model}")
+else:
+    # Download and download the model
+    models.download_models(model=args.model)
+    print(f"Downloaded {args.model} at {models.models_path}")
 
 # prediction
 predictions = celltypist.annotate(
