@@ -1,5 +1,5 @@
 samplesheet: "./data/sampleSheet.csv"
-outdir: "../scratch/"
+outdir: "./data/results/"
 experiment:
     name: "toy_data"
 cellbender:
@@ -11,6 +11,9 @@ postprocessing:
     n_pca_components: 3
     n_diffmap_components: 3
     metadata: "None"
+celltypist:
+    model: "Immune_All_Low.pkl"
+mount: "/data1,/home,/scratch"
 with_gpu: true
 max_memory: "6.GB"
 max_cpus: 6
