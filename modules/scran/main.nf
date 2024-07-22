@@ -12,7 +12,7 @@ process SCRAN {
     script: // set home directory to cache basilisk
     """
     export PATH=/opt/conda/envs/scran/bin/:$PATH
-    export HOME=${workDir}
+    export HOME=\$PWD
     Rscript ${baseDir}/bin/scran.R \
         ${aggregation_h5ad} \
         "${params.experiment.name ? params.experiment.name + '_' : ''}scran.h5ad"

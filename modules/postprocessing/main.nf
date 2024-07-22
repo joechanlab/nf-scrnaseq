@@ -12,7 +12,7 @@ process POSTPROCESSING {
 
     script:
     """
-    export NUMBA_CACHE_DIR=${workDir}
+    export NUMBA_CACHE_DIR=\$PWD
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
         ${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing.h5ad \
