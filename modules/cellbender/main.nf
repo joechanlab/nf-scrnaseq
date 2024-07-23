@@ -15,8 +15,9 @@ process CELLBENDER {
 
     script:
     def gpu_index = task.index % params.maxForks
-    if(task.executor == 'lsf')
+    if(task.executor == 'singularity')
         """
+        export CUDA_VISIBLE_DEVICES=$gpu_index
         python ${baseDir}/bin/run_cellbender.py \
             ${raw_path} \
             ${name}_cellbender.h5 \
@@ -25,7 +26,6 @@ process CELLBENDER {
         """
     else
         """
-        export CUDA_VISIBLE_DEVICES=$gpu_index
         python ${baseDir}/bin/run_cellbender.py \
             ${raw_path} \
             ${name}_cellbender.h5 \

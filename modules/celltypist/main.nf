@@ -12,9 +12,11 @@ process CELLTYPIST {
 
     script:
     def gpu_index = task.index % params.maxForks
-    if(task.executor == 'lsf')
+    if(task.executor == 'singularity')
         """
-        export NUMBA_CACHE_DIR=${workDir}
+        export CUDA_VISIBLE_DEVICES=\$PWD
+        export NUMBA_CACHE_DIR=\$PWD
+        export MPLCONFIGDIR=\$PWD
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
             ${params.experiment.name}_celltypist_scvi.h5ad \
@@ -25,8 +27,8 @@ process CELLTYPIST {
         """
     else
         """
-        export CUDA_VISIBLE_DEVICES=$gpu_index
-        export NUMBA_CACHE_DIR=${workDir}
+        export NUMBA_CACHE_DIR=\$PWD
+        export MPLCONFIGDIR=\$PWD
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
             ${params.experiment.name}_celltypist_scvi.h5ad \

@@ -1,9 +1,10 @@
 module load singularity/3.7.1
-module load gcc/10.2.0
-module load cuda/11.7
-export NXF_SINGULARITY_CACHEDIR="/lila/data/chanjlab/wangm10/work-nf-scrnaseq/singularity/"
+module load gcc/12.2.0
+module load cuda/12.0
+#export NXF_SINGULARITY_CACHEDIR="/lila/data/chanjlab/wangm10/work-nf-scrnaseq/singularity/"
+export NXF_SINGULARITY_CACHEDIR="/usersoftware/chanj3/singularity/"
 
-nextflow run ./main.nf -resume -profile lilac -params-file ./params.yml -w "/lila/data/chanjlab/wangm10/scratch/"
+nextflow run ./main.nf -resume -profile iris -params-file ./params.yml -w "/scratch/chanj3/wangm10/work"
 # nextflow run ./main.nf -resume 0b2aab78-3380-47e5-bf3a-d2babb788b9f -profile lilac -params-file ./params.yml -w "../work-cellbender-test/"
 
 # nextflow run ./main.nf -resume -profile singularity -params-file ../oliver_RPMN_2024/oliver_RPMN_2024_params.yml -w "/lila/data/chanjlab/wangm10/work-nf-scrnaseq/"

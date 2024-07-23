@@ -13,7 +13,7 @@ process REPORT {
 
     script:
     """
-    export HOME=${workDir}
+    export HOME=\$PWD
     python -m ipykernel install --user --name postprocessing
     papermill ${baseDir}/bin/QC.ipynb ${params.experiment.name}_report.ipynb -p plots ${params.report.plots}
     jupyter nbconvert --to html ${params.experiment.name}_report.ipynb

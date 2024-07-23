@@ -1,7 +1,7 @@
 process AGGREGATION {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
-    containerOptions '--bind /lila:/lila'
+    containerOptions "--bind ${params.mount}"
     publishDir "${params.outdir}/aggregation/", mode: 'copy'
 
     input:
