@@ -38,6 +38,7 @@ celltypist:
     model: "Human_Lung_Atlas.pkl"     # model to use for celltypist
 report:
    plot: "./markers.csv"              # custom variables to plot
+mount: "/home,/data1"                 # path to mount for singularity
 with_gpu: true                        # using GPU
 maxForks: 2                           # maximum number of processes in parallel (e.g # of GPU)
 max_memory: "6.GB"                    # memory information
