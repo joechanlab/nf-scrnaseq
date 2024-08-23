@@ -25,7 +25,8 @@ workflow {
         def raw_path = file(row[1])
         def filtered_path = row[2]
         def demultiplexing = row[3].toLowerCase()
-        return tuple(name, raw_path, filtered_path, demultiplexing)
+        def expected_droplets = row[4]
+        return tuple(name, raw_path, filtered_path, demultiplexing, expected_droplets)
     }
 
     // run Cellbender
