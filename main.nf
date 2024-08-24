@@ -32,28 +32,36 @@ workflow {
     // run Cellbender
     CELLBENDER(ch_input)
 
-    // run DoubletDetection with optional demultiplexing
+    // run DoubletDetection (Optional: demultiplexing)
     DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.raw_h5, CELLBENDER.out.filtered_path, CELLBENDER.out.demultiplexing)
 
-    // aggregate the outputs
-    AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+    // Optional: aggregate the outputs
+    if (params.aggregation) {
+        AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+        outlier_input_name = AGGREGATION.out.name
+        outlier_input = AGGREGATION.out.aggregation_h5ad
+    } else {
+        outlier_input_name = DOUBLETDETECTION.out.name
+        outlier_input = DOUBLETDETECTION.out.doublet_h5ad
+    }
 
     // filter out outliers
-    OUTLIER_FILTER(AGGREGATION.out.aggregation_h5ad)
+    OUTLIER_FILTER(outlier_input_name, outlier_input)
 
     // SCRAN normalization
-    SCRAN(OUTLIER_FILTER.out.outlier_filtered_h5ad)
+    SCRAN(OUTLIER_FILTER.out.name, OUTLIER_FILTER.out.outlier_filtered_h5ad)
 
     // SCVI batch correction
-    SCVI(SCRAN.out.scran_h5ad)
+    SCVI(SCRAN.out.name, SCRAN.out.scran_h5ad)
 
     // Postprocessing
-    POSTPROCESSING(SCVI.out.scvi_h5ad)
+    POSTPROCESSING(SCVI.out.name, SCVI.out.scvi_h5ad)
 
     // Celltypist
-    CELLTYPIST(POSTPROCESSING.out.postprocessing_scvi_h5ad)
+    CELLTYPIST(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_scvi_h5ad)
 
     // Report
-    REPORT(POSTPROCESSING.out.postprocessing_h5ad,
-    CELLTYPIST.out.celltypist_scvi_h5ad)
+    REPORT(CELLTYPIST.out.name,
+        CELLTYPIST.out.postprocessing_h5ad,
+        CELLTYPIST.out.celltypist_scvi_h5ad)
 }

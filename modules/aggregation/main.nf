@@ -8,6 +8,7 @@ process AGGREGATION {
     val doublet_h5ads
 
     output:
+    val "${params.experiment.name}", emit: name
     path "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad", emit: aggregation_h5ad
 
     script:

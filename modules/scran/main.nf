@@ -4,10 +4,12 @@ process SCRAN {
     publishDir "${params.outdir}/scran/", mode: 'copy'
 
     input:
+    val name
     file aggregation_h5ad
 
     output:
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}scran.h5ad", emit: scran_h5ad
+    val "${name}", emit: name
+    path "${name}_scran.h5ad", emit: scran_h5ad
 
     script: // set home directory to cache basilisk
     """
@@ -15,6 +17,6 @@ process SCRAN {
     export HOME=\$PWD
     Rscript ${baseDir}/bin/scran.R \
         ${aggregation_h5ad} \
-        "${params.experiment.name ? params.experiment.name + '_' : ''}scran.h5ad"
+        "${name}_scran.h5ad"
     """
 }
