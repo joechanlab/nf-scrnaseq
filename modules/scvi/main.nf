@@ -5,17 +5,19 @@ process SCVI {
     publishDir "${params.outdir}/scvi/", mode: 'copy'
 
     input:
+    val name
     path scran_h5ad
 
     output:
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}scvi.h5ad", emit: scvi_h5ad
+    val "${name}", emit: name
+    path "${name}_scvi.h5ad", emit: scvi_h5ad
 
     script:
     """
     export NUMBA_CACHE_DIR=\$PWD
     python ${baseDir}/bin/scvi_norm.py \
         ${scran_h5ad} \
-        ${params.experiment.name ? params.experiment.name + '_' : ''}scvi.h5ad \
+        ${name}_scvi.h5ad \
         --n_latent ${params.scvi.n_latent} \
         --n_top_genes ${params.scvi.n_top_genes}
     """

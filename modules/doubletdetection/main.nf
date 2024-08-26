@@ -11,6 +11,7 @@ process DOUBLETDETECTION {
     val demultiplexing
 
     output:
+    val "${name}", emit: name
     path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
 
     script:

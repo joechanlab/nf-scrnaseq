@@ -5,7 +5,7 @@ process CELLBENDER {
     publishDir "${params.outdir}/cellbender/", mode: 'copy'
 
     input:
-    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing)
+    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)
 
     output:
     val "${name}", emit: name
@@ -21,7 +21,7 @@ process CELLBENDER {
         python ${baseDir}/bin/run_cellbender.py \
             ${raw_path} \
             ${name}_cellbender.h5 \
-            ${params.cellbender.total_droplets_included} \
+            ${expected_droplets} \
             --filtered ${filtered_path}
         """
     else
@@ -29,7 +29,7 @@ process CELLBENDER {
         python ${baseDir}/bin/run_cellbender.py \
             ${raw_path} \
             ${name}_cellbender.h5 \
-            ${params.cellbender.total_droplets_included} \
+            ${expected_droplets} \
             --filtered ${filtered_path}
         """
 }

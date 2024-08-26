@@ -4,16 +4,18 @@ process OUTLIER_FILTER {
     publishDir "${params.outdir}/outlier_filtered/", mode: 'copy'
 
     input:
+    val name
     path aggregation_h5ad
 
     output:
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}outlier_filtered.h5ad", emit: outlier_filtered_h5ad
+    val "${name}", emit: name
+    path "${name}_outlier_filtered.h5ad", emit: outlier_filtered_h5ad
 
     script:
     """
     export NUMBA_CACHE_DIR=\$PWD
     python ${baseDir}/bin/outlier_filter.py \
         ${aggregation_h5ad} \
-        ${params.experiment.name ? params.experiment.name + '_' : ''}outlier_filtered.h5ad
+        ${name}_outlier_filtered.h5ad
     """
 }
