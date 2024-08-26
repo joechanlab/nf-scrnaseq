@@ -3,7 +3,7 @@ import os
 import argparse
 import scanpy as sc
 import doubletdetection
-from utils import anndata_from_h5
+from utils import anndata_from_h5, get_basename_without_extension
 
 os.environ["NUMBA_CACHE_DIR"] = "/tmp/"
 
@@ -98,4 +98,7 @@ doublet_score = clf.doublet_score()
 adata_batch.obs["doublet"] = doublets.astype(bool)
 adata_batch.obs["doublet_score"] = doublet_score
 
+adata_batch.obs["sample_name"] = get_basename_without_extension(args.input_h5).rsplit(
+    "_", 1
+)[0]
 adata_batch.write_h5ad(args.output_h5ad)
