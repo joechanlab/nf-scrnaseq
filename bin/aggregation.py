@@ -15,7 +15,7 @@ adata_list = []
 for idx, h5_file_path in enumerate(args.inputs, start=1):
     print(h5_file_path)
     adata = sc.read(h5_file_path)
-    adata.obs.index = adata.obs["sample_name"] + "_" + adata.obs.index
+    adata.obs.index = adata.obs["sample_name"].astype(str) + "_" + adata.obs.index
     adata.var_names_make_unique()
     adata_list.append(adata)
 

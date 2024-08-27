@@ -17,6 +17,13 @@ parser.add_argument("output_h5ad", help="The output path.")
 parser.add_argument(
     "--sample_col", default="sample_name", help="The sample column name."
 )
+parser.add_argument(
+    "--remove_outliers",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Whether to remove outlier cells.",
+)
 args = parser.parse_args()
 
 
@@ -166,6 +173,9 @@ designate_outliers(adata, condition=default_filter, group_key=args.sample_col)
 
 # Filter genes
 sc.pp.filter_genes(adata, min_cells=1)
+
+if args.remove_outliers:
+    adata = adata[~adata.obs["outlier"]]
 
 # Save results
 adata.write_h5ad(args.output_h5ad)

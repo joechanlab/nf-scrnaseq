@@ -26,6 +26,15 @@ process DOUBLETDETECTION {
             ${name}_doubletdetection.h5ad \
             --filtered_h5 ${filtered_path}
         """
+    else if (params.remove_doublets)
+        """
+        export NUMBA_CACHE_DIR=\$PWD
+        python ${baseDir}/bin/doublet_detection.py \
+            ${cellbender_h5} \
+            ${name}_doubletdetection.h5ad \
+            --filtered_h5 ${filtered_path} \
+            --remove_doublets
+        """
     else
         """
         export NUMBA_CACHE_DIR=\$PWD
