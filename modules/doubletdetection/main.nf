@@ -7,7 +7,7 @@ process DOUBLETDETECTION {
     input:
     val name
     path cellbender_h5
-    val filtered_path
+    path filtered_path
     val demultiplexing
 
     output:

@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl = 2
-
+include {EXTRACT_RNA} from './modules/extract_rna'
 include {CELLBENDER} from './modules/cellbender'
 include {DOUBLETDETECTION} from './modules/doubletdetection'
 include {AGGREGATION} from './modules/aggregation'
@@ -30,7 +30,12 @@ workflow {
     }
 
     // run Cellbender
-    CELLBENDER(ch_input)
+    if (params.atac) {
+        EXTRACT_RNA(ch_input)
+        CELLBENDER(EXTRACT_RNA.out.output)
+    } else {
+        CELLBENDER(ch_input)
+    }
 
     // run DoubletDetection (Optional: demultiplexing)
     DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.raw_h5, CELLBENDER.out.filtered_path, CELLBENDER.out.demultiplexing)
