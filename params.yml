@@ -2,7 +2,9 @@ samplesheet: "./data/sampleSheet.csv"
 outdir: "./data/results/"
 experiment:
     name: "toy_data"
-aggregation: false
+remove_doublets: true
+remove_outliers: true
+aggregation: true
 scvi:
     n_latent: 10
     n_top_genes: 10
@@ -11,6 +13,7 @@ postprocessing:
     n_diffmap_components: 3
     metadata: "None"
 celltypist:
+    skip: true
     model: "Immune_All_Low.pkl"
 report:
     plots: "None"

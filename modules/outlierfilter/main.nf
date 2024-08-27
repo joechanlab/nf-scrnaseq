@@ -12,10 +12,19 @@ process OUTLIER_FILTER {
     path "${name}_outlier_filtered.h5ad", emit: outlier_filtered_h5ad
 
     script:
-    """
-    export NUMBA_CACHE_DIR=\$PWD
-    python ${baseDir}/bin/outlier_filter.py \
-        ${aggregation_h5ad} \
-        ${name}_outlier_filtered.h5ad
-    """
+    if (params.remove_outliers)
+        """
+        export NUMBA_CACHE_DIR=\$PWD
+        python ${baseDir}/bin/outlier_filter.py \
+            ${aggregation_h5ad} \
+            ${name}_outlier_filtered.h5ad \
+            --remove_outliers
+        """
+    else
+        """
+        export NUMBA_CACHE_DIR=\$PWD
+        python ${baseDir}/bin/outlier_filter.py \
+            ${aggregation_h5ad} \
+            ${name}_outlier_filtered.h5ad
+        """
 }
