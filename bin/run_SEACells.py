@@ -12,9 +12,7 @@ def parse_arguments():
         "output_dir",
         help="Path to the output directory to save metacells and assignments",
     )
-    parser.add_argument(
-        "--n_SEACells", default=1000, type=int, help="Number of SEACells"
-    )
+    parser.add_argument("--n_SEACells", default=25, type=int, help="Number of SEACells")
     parser.add_argument(
         "--build_kernel_on", default="X_pca", help="Key to use for computing metacells"
     )
