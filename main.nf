@@ -47,7 +47,7 @@ workflow {
     }
 
     // Filter out outliers
-    OUTLIER_FILTER(outlier_input.name, outlier_input.aggregation_h5ad ?: outlier_input.doublet_h5ad)
+    OUTLIER_FILTER(outlier_input.name, outlier_input.output_h5ad)
 
     // SCRAN normalization
     SCRAN(OUTLIER_FILTER.out.name, OUTLIER_FILTER.out.outlier_filtered_h5ad)

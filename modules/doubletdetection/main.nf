@@ -12,7 +12,7 @@ process DOUBLETDETECTION {
 
     output:
     val "${name}", emit: name
-    path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
+    path "${name}_doubletdetection.h5ad", emit: output_h5ad
 
     script:
     if(demultiplexing == 'true')
