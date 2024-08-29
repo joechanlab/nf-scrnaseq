@@ -12,7 +12,7 @@ include { SCVI } from './modules/scvi'
 include { POSTPROCESSING } from './modules/postprocessing'
 include { CELLTYPIST } from './modules/celltypist'
 include { REPORT } from './modules/report'
-include { ATAC_QC } from './modules/atac_qc'
+include { SEACELLS } from './modules/seacells'
 
 workflow {
     // Access the samplesheet
@@ -64,6 +64,11 @@ workflow {
     } else {
         CELLTYPIST(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_scvi_h5ad)
         REPORT(CELLTYPIST.out.name, CELLTYPIST.out.postprocessing_h5ad, CELLTYPIST.out.celltypist_scvi_h5ad)
+    }
+
+    // SEACells
+    if (params.atac) {
+        SEACELLS(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_h5ad)
     }
 
 }
