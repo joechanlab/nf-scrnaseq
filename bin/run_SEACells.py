@@ -43,7 +43,7 @@ def main():
     model.fit(min_iter=10, max_iter=200)
 
     SEACell_ad = SEACells.core.summarize_by_SEACell(
-        ad, SEACells_label="SEACell", summarize_layer="raw"
+        ad, SEACells_label="SEACell", summarize_layer="counts"
     )
 
     SEACell_ad.write_h5ad(args.output_h5ad)
