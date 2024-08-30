@@ -2,6 +2,7 @@ samplesheet: "./data/sampleSheet.csv"
 outdir: "./data/results/"
 experiment:
     name: "toy_data"
+atac: false
 remove_doublets: true
 remove_outliers: true
 aggregation: true

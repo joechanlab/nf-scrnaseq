@@ -7,12 +7,12 @@ process DOUBLETDETECTION {
     input:
     val name
     path cellbender_h5
-    val filtered_path
+    path filtered_path
     val demultiplexing
 
     output:
     val "${name}", emit: name
-    path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
+    path "${name}_doubletdetection.h5ad", emit: output_h5ad
 
     script:
     if(demultiplexing == 'true')

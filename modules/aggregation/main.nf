@@ -9,7 +9,7 @@ process AGGREGATION {
 
     output:
     val "${params.experiment.name}", emit: name
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad", emit: aggregation_h5ad
+    path "${params.experiment.name ? params.experiment.name + '_' : ''}aggregation.h5ad", emit: output_h5ad
 
     script:
     joined_file_paths = doublet_h5ads.join(' ')
