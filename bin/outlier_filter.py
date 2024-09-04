@@ -17,6 +17,13 @@ parser.add_argument("output_h5ad", help="The output path.")
 parser.add_argument(
     "--sample_col", default="sample_name", help="The sample column name."
 )
+parser.add_argument(
+    "--remove_outliers",
+    type=bool,
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Whether to remove outlier cells.",
+)
 args = parser.parse_args()
 
 
@@ -142,6 +149,23 @@ def designate_outliers(
 # Load data
 adata = sc.read_h5ad(args.input_h5ad)
 
+# Compute QC metrics useful for downstream analysis
+adata.var["mito"] = adata.var_names.str.upper().str.startswith(("MT-"))
+adata.var["ribo"] = adata.var_names.str.upper().str.startswith(("RPS", "RPL"))
+
+adata.obs["mito_frac"] = np.sum(adata[:, adata.var["mito"]].X, axis=1) / np.sum(
+    adata.X, axis=1
+)
+
+sc.pp.calculate_qc_metrics(adata, percent_top=[20], inplace=True)
+sc.pp.calculate_qc_metrics(
+    adata,
+    qc_vars=["ribo", "mito"],
+    percent_top=None,
+    log1p=False,
+    inplace=True,
+)
+
 calculate_group_featcount_dist(adata, group_key=args.sample_col)
 
 # Mark outliers
@@ -149,6 +173,9 @@ designate_outliers(adata, condition=default_filter, group_key=args.sample_col)
 
 # Filter genes
 sc.pp.filter_genes(adata, min_cells=1)
+
+if args.remove_outliers:
+    adata = adata[~adata.obs["outlier"]]
 
 # Save results
 adata.write_h5ad(args.output_h5ad)

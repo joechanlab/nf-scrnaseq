@@ -13,9 +13,11 @@ First, prepare a samplesheet with your input data that looks as follows, where e
 
 `samplesheet.csv`:
 ```csv
-sample, raw_h5, filtered_h5, demultiplexing
-CONTROL_REP1, raw_feature_bc_matrix.h5, filtered_feature_bc_matrix.h5, false
+sample, raw_h5, filtered_h5, demultiplexing, expected_droplets
+CONTROL_REP1, raw_feature_bc_matrix.h5, filtered_feature_bc_matrix.h5, false, 50000
 ```
+> [!Note]
+> See suggestions on choice of the `expected_droplets` parameter [here](https://www.10xgenomics.com/analysis-guides/background-removal-guidance-for-single-cell-gene-expression-datasets-using-third-party-tools).
 
 Next, prepare a parameter YAML file that looks as follows:
 
@@ -25,8 +27,10 @@ samplesheet: "./samplesheet.csv"      # path to the sample sheet
 outdir: "./out/"                      # directory containing the outputs
 experiment:
     name: "experiment"                # experiment name for prefix
-cellbender:                           # cellbender parameters (see bin/cellbender.py)
-    total_droplets_included: 50000
+atac: false                           # whether the data is 10X Multiome data
+aggregation: true                     # whether to aggregate samples
+remove_doublets: false                # whether to remove cells marked as doublets
+remove_outliers: false                # whether to remove cells markerd as outliers
 scvi:                                 # scvi parameters (see bin/scvi_norm.py)
     n_latent: 50
     n_top_genes: 1000                 # Note: large values might give error in writing h5ad
@@ -38,6 +42,11 @@ celltypist:
     model: "Human_Lung_Atlas.pkl"     # model to use for celltypist
 report:
    plot: "./markers.csv"              # custom variables to plot
+seacells:                             # SEACells parameters (see bin/run_SEACells.py)
+    n_SEACells: 25
+    build_kernel_on: "X_pca"
+    n_waypoint_eigs: 10
+mount: "/home,/data1"                 # path to mount for singularity
 with_gpu: true                        # using GPU
 maxForks: 2                           # maximum number of processes in parallel (e.g # of GPU)
 max_memory: "6.GB"                    # memory information

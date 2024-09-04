@@ -54,11 +54,14 @@ if args.normalize:
 # Check if the model path exists, if not
 if os.path.exists(args.model):
     # Load the model
+    print(f"Found model at {args.models}")
     model = models.Model.load(model=args.model)
     print(f"Loaded {args.model}")
 else:
-    # Download and download the model
+    # Download the model
+    print("Downloading the model...")
     models.download_models(model=args.model)
+    model = args.model
     print(f"Downloaded {args.model} at {models.models_path}")
 
 # prediction

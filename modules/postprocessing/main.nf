@@ -4,23 +4,25 @@ process POSTPROCESSING {
     publishDir "${params.outdir}/postprocessing/", mode: 'copy'
 
     input:
+    val name
     path scvi_h5ad
 
     output:
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing.h5ad", emit: postprocessing_h5ad
-    path "${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
+    val "${name}", emit: name
+    path "${name}_postprocessing.h5ad", emit: postprocessing_h5ad
+    path "${name}_postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
 
     script:
     """
     export NUMBA_CACHE_DIR=\$PWD
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
-        ${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing.h5ad \
+        ${name}_postprocessing.h5ad \
         --n_pca_components ${params.postprocessing.n_pca_components} \
         --metadata ${params.postprocessing.metadata}
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
-        ${params.experiment.name ? params.experiment.name + '_' : ''}postprocessing_scvi.h5ad \
+        ${name}_postprocessing_scvi.h5ad \
         --use_scvi \
         --metadata ${params.postprocessing.metadata}
     """

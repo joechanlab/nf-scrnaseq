@@ -3,7 +3,7 @@ import os
 import argparse
 import scanpy as sc
 import doubletdetection
-from utils import anndata_from_h5
+from utils import anndata_from_h5, get_basename_without_extension
 
 os.environ["NUMBA_CACHE_DIR"] = "/tmp/"
 
@@ -45,6 +45,11 @@ parser.add_argument(
     nargs="*",
     default="",
     help="Path to cellranger filtered 10x h5 data.",
+)
+parser.add_argument(
+    "--remove_doublets",
+    action="store_true",
+    help="Whether to remove doublet cells.",
 )
 
 args = parser.parse_args()
@@ -97,5 +102,12 @@ doublet_score = clf.doublet_score()
 
 adata_batch.obs["doublet"] = doublets.astype(bool)
 adata_batch.obs["doublet_score"] = doublet_score
+
+adata_batch.obs["sample_name"] = get_basename_without_extension(args.input_h5).rsplit(
+    "_", 1
+)[0]
+
+if args.remove_doublets:
+    adata_batch = adata_batch[~adata_batch.obs["doublet"]]
 
 adata_batch.write_h5ad(args.output_h5ad)

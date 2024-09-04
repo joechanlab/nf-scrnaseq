@@ -2,8 +2,10 @@ samplesheet: "./data/sampleSheet.csv"
 outdir: "./data/results/"
 experiment:
     name: "toy_data"
-cellbender:
-    total_droplets_included: 2000
+atac: false
+remove_doublets: true
+remove_outliers: true
+aggregation: true
 scvi:
     n_latent: 10
     n_top_genes: 10
@@ -12,7 +14,10 @@ postprocessing:
     n_diffmap_components: 3
     metadata: "None"
 celltypist:
+    skip: true
     model: "Immune_All_Low.pkl"
+report:
+    plots: "None"
 mount: "/data1,/home,/scratch"
 with_gpu: true
 max_memory: "6.GB"
