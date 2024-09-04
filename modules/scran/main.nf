@@ -5,7 +5,7 @@ process SCRAN {
 
     input:
     val name
-    file aggregation_h5ad
+    path aggregation_h5ad
 
     output:
     val "${name}", emit: name

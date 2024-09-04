@@ -5,7 +5,7 @@ process EXTRACT_RNA {
     publishDir "${params.outdir}/extract_rna/", mode: 'copy'
 
     input:
-    tuple val(name), path(raw_path), path(filtered_path), val(demultiplexing), val(expected_droplets)
+    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)
 
     output:
     tuple val(name), path("${name}_raw_RNA.h5ad"), path("${name}_filtered_RNA.h5ad"), val(demultiplexing), val(expected_droplets), emit: output
