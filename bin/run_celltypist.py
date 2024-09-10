@@ -54,7 +54,7 @@ if args.normalize:
 # Check if the model path exists, if not
 if os.path.exists(args.model):
     # Load the model
-    print(f"Found model at {args.models}")
+    print(f"Found model at {args.model}")
     model = models.Model.load(model=args.model)
     print(f"Loaded {args.model}")
 else:
