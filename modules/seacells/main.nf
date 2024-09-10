@@ -15,7 +15,7 @@ process SEACELLS {
     script:
     """
     export NUMBA_CACHE_DIR=\$PWD
-    python ${baseDir}/bin/run_SEACells.py \
+    /usersoftware/chanj3/SEACells/bin/python ${baseDir}/bin/run_SEACells.py \
         ${input_h5ad} \
         ${name}_seacells.h5ad \
         ${name}_seacells_assignments \

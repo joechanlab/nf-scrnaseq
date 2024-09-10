@@ -15,6 +15,7 @@ process CELLTYPIST {
 
     script:
     def gpu_index = task.index % params.maxForks
+
     if(task.executor == 'singularity')
         """
         export CUDA_VISIBLE_DEVICES=\$PWD
@@ -32,6 +33,9 @@ process CELLTYPIST {
         """
         export NUMBA_CACHE_DIR=\$PWD
         export MPLCONFIGDIR=\$PWD
+        echo "Debug: params.mount = ${params.mount}"
+        echo "Debugging: Listing contents of /usersoftware"
+        ls -la /usersoftware/chanj3/
         python ${baseDir}/bin/run_celltypist.py \
             ${postprocessing_scvi_h5ad} \
             ${name}_celltypist_scvi.h5ad \
