@@ -51,26 +51,58 @@ if args.normalize:
     sc.pp.normalize_total(adata, target_sum=10**4)
     sc.pp.log1p(adata)
 
-# Check if the model path exists, if not
-if os.path.exists(args.model):
-    # Load the model
-    print(f"Found model at {args.model}")
-    model = models.Model.load(model=args.model)
-    print(f"Loaded {args.model}")
-else:
-    # Download the model
-    print("Downloading the model...")
-    models.download_models(model=args.model)
-    model = args.model
-    print(f"Downloaded {args.model} at {models.models_path}")
+# Check if multiple models are specified
+models_list = [model.strip() for model in args.model.split(",")]
 
-# prediction
-predictions = celltypist.annotate(
-    adata, model=model, majority_voting=args.majority_voting
-)
-print("Made predictions")
+# Initialize a list to store predictions
+all_predictions = []
+
+for model_name in models_list:
+    if os.path.exists(model_name):
+        print(f"Found model at {model_name}")
+        model = models.Model.load(model=model_name)
+        print(f"Loaded {model_name}")
+    elif model_name in models.get_all_models():
+        model = models.Model.load(model=model_name)
+        print(f"Loaded {model_name} from celltypist's built-in models")
+    else:
+        print(f"Warning: Model {model_name} not found. Skipping...")
+        continue
+
+    # prediction
+    predictions = celltypist.annotate(
+        adata, model=model, majority_voting=args.majority_voting
+    )
+    print(f"Made predictions using {model_name}")
+    all_predictions.append(predictions)
+
+# Combine predictions if multiple models were used
+if len(all_predictions) > 1:
+    # You might want to implement a method to combine predictions here
+    # Combine predictions from multiple models
+    for idx, prediction in enumerate(all_predictions):
+        # Convert prediction to AnnData
+        pred_adata = prediction.to_adata(
+            insert_labels=True, insert_conf=True, insert_prob=True
+        )
+
+        # Find extra columns in the prediction
+        extra_columns = set(pred_adata.obs.columns) - set(adata.obs.columns)
+
+        # Merge extra columns to the original AnnData
+        for col in extra_columns:
+            if col in adata.obs.columns:
+                # If column already exists, append index to avoid conflicts
+                new_col = f"{col}_{idx}"
+            else:
+                new_col = col
+            adata.obs[new_col] = pred_adata.obs[col]
+    print(f"Combined predictions from {len(all_predictions)} models")
+else:
+    adata = all_predictions[0].to_adata(
+        insert_labels=True, insert_conf=True, insert_prob=True
+    )
 
 # Write data
-adata = predictions.to_adata(insert_labels=True, insert_conf=True, insert_prob=True)
 adata.write_h5ad(args.output_h5ad)
 print(f"Wrote {args.output_h5ad}")
