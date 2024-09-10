@@ -42,6 +42,7 @@ args = parser.parse_args()
 
 # Read data
 adata = sc.read_h5ad(args.input_h5ad)
+original_columns = set(adata.obs.columns)
 print(f"Read {args.input_h5ad}")
 
 # Perform normalization required by celltypist
@@ -56,7 +57,6 @@ models_list = [model.strip() for model in args.model.split(",")]
 
 # Initialize a list to store predictions
 all_predictions = []
-
 for model_name in models_list:
     if os.path.exists(model_name):
         print(f"Found model at {model_name}")
@@ -68,34 +68,21 @@ for model_name in models_list:
     else:
         print(f"Warning: Model {model_name} not found. Skipping...")
         continue
-
-    # prediction
+    model_adata = adata.copy()
     predictions = celltypist.annotate(
-        adata, model=model, majority_voting=args.majority_voting
+        model_adata, model=model, majority_voting=args.majority_voting
     )
-    print(f"Made predictions using {model_name}")
-    all_predictions.append(predictions)
+    pred_adata = predictions.to_adata(
+        insert_labels=True, insert_conf=True, insert_prob=True
+    )
+    all_predictions.append(pred_adata)
 
 # Combine predictions if multiple models were used
 if len(all_predictions) > 1:
-    # You might want to implement a method to combine predictions here
-    # Combine predictions from multiple models
-    for idx, prediction in enumerate(all_predictions):
-        # Convert prediction to AnnData
-        pred_adata = prediction.to_adata(
-            insert_labels=True, insert_conf=True, insert_prob=True
-        )
-
-        # Find extra columns in the prediction
-        extra_columns = set(pred_adata.obs.columns) - set(adata.obs.columns)
-
-        # Merge extra columns to the original AnnData
+    for idx, pred_adata in enumerate(all_predictions):
+        extra_columns = set(pred_adata.obs.columns) - original_columns
         for col in extra_columns:
-            if col in adata.obs.columns:
-                # If column already exists, append index to avoid conflicts
-                new_col = f"{col}_{idx}"
-            else:
-                new_col = col
+            new_col = f"{col}_{idx}" if col in adata.obs.columns else col
             adata.obs[new_col] = pred_adata.obs[col]
     print(f"Combined predictions from {len(all_predictions)} models")
 else:
