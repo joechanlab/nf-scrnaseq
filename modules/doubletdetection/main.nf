@@ -3,6 +3,7 @@ process DOUBLETDETECTION {
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     containerOptions "--bind ${params.mount}"
     publishDir "${params.outdir}/rna_doubletdetection/", mode: 'copy'
+    cache 'lenient'
 
     input:
     tuple val(name), path(cellbender_h5), val(filtered_path), val(demultiplexing), val(expected_droplets)

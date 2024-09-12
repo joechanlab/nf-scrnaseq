@@ -3,6 +3,7 @@ process CELLBENDER {
     container 'us.gcr.io/broad-dsde-methods/cellbender:latest'
     containerOptions '--nv --bind ${params.mount}'
     publishDir "${params.outdir}/rna_cellbender/", mode: 'copy'
+    cache 'lenient'
 
     input:
     tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)

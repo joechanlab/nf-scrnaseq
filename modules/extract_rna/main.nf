@@ -3,6 +3,7 @@ process EXTRACT_RNA {
     container 'library://mamie_wang/nf-scrnaseq/muon.sif:latest'
     containerOptions "--bind ${params.mount}"
     publishDir "${params.outdir}/extract_rna/", mode: 'copy'
+    cache 'lenient'
 
     input:
     tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)

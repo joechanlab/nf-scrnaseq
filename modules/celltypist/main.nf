@@ -3,6 +3,7 @@ process CELLTYPIST {
     container 'quay.io/teichlab/celltypist:latest'
     containerOptions "--nv --bind ${params.mount}"
     publishDir "${params.outdir}/rna_celltypist/", mode: 'copy'
+    cache 'lenient'
 
     input:
     val name

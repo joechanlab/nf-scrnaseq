@@ -2,6 +2,7 @@ process OUTLIER_FILTER {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/postprocessing.sif:latest'
     publishDir "${params.outdir}/rna_outlier_filtered/", mode: 'copy'
+    cache 'lenient'
 
     input:
     val name
