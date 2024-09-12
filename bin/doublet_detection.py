@@ -81,7 +81,8 @@ if args.filtered_h5 != "":
     adata_sample = adata_sample[adata_sample.obs_names.isin(common_barcodes)]
     adata_batch = adata_batch[adata_batch.obs_names.isin(common_barcodes)]
 
-adata_batch = adata_batch[adata_batch.obs["cell_probability"] > 0.9]
+if "cell_probability" in adata_batch.obs.columns:
+    adata_batch = adata_batch[adata_batch.obs["cell_probability"] > 0.9]
 adata_batch.var_names_make_unique()
 sc.pp.filter_genes(adata_batch, min_cells=1)
 

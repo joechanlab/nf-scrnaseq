@@ -2,13 +2,10 @@ process DOUBLETDETECTION {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     containerOptions "--bind ${params.mount}"
-    publishDir "${params.outdir}/doubletdetection/", mode: 'copy'
+    publishDir "${params.outdir}/rna_doubletdetection/", mode: 'copy'
 
     input:
-    val name
-    path cellbender_h5
-    val filtered_path
-    val demultiplexing
+    tuple val(name), path(cellbender_h5), val(filtered_path), val(demultiplexing), val(expected_droplets)
 
     output:
     val "${name}", emit: name

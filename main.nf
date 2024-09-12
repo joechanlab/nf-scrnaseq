@@ -22,21 +22,25 @@ workflow {
     sample_sheet_data = sample_sheet.text.readLines().drop(1).collect { it.split(',') }
 
     // Create a channel from the paths
-    ch_input = Channel.from(sample_sheet_data).map { row ->
+    out = Channel.from(sample_sheet_data).map { row ->
         def (name, raw_path, filtered_path, demultiplexing, expected_droplets) = row
         return tuple(name, file(raw_path), filtered_path, demultiplexing.toLowerCase(), expected_droplets)
     }
 
     // Run Cellbender
     if (params.atac) {
-        EXTRACT_RNA(ch_input)
-        CELLBENDER(EXTRACT_RNA.out.output)
-    } else {
-        CELLBENDER(ch_input)
+        EXTRACT_RNA(out)
+        out = EXTRACT_RNA.out.output
     }
 
-    // Run DoubletDetection (Optional: demultiplexing)
-    DOUBLETDETECTION(CELLBENDER.out.name, CELLBENDER.out.raw_h5, CELLBENDER.out.filtered_path, CELLBENDER.out.demultiplexing)
+    // run Cellbender
+    if (!params.cellbender.skip) {
+        CELLBENDER(out)
+        out = CELLBENDER.out.output
+    }
+
+    // Run DoubletDetection
+    DOUBLETDETECTION(out)
 
     // Optional: aggregate the outputs
     if (params.aggregation) {

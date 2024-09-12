@@ -1,7 +1,7 @@
 process SEACELLS {
     label 'process_medium'
     conda "/usersoftware/chanj3/SEACells"
-    publishDir "${params.outdir}/seacells/", mode: 'copy'
+    publishDir "${params.outdir}/rna_seacells/", mode: 'copy'
 
     input:
     val name

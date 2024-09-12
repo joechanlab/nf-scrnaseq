@@ -2,7 +2,7 @@ process SCVI {
     label 'gpus'
     container "docker://scverse/scvi-tools:py3.11-cu12-tutorials-latest"
     containerOptions '--nv'
-    publishDir "${params.outdir}/scvi/", mode: 'copy'
+    publishDir "${params.outdir}/rna_scvi/", mode: 'copy'
 
     input:
     val name

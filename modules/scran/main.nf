@@ -1,7 +1,7 @@
 process SCRAN {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/scran.sif:latest'
-    publishDir "${params.outdir}/scran/", mode: 'copy'
+    publishDir "${params.outdir}/rna_scran/", mode: 'copy'
 
     input:
     val name

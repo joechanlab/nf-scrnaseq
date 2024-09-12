@@ -2,7 +2,7 @@ process AGGREGATION {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
     containerOptions "--bind ${params.mount}"
-    publishDir "${params.outdir}/aggregation/", mode: 'copy'
+    publishDir "${params.outdir}/rna_aggregation/", mode: 'copy'
 
     input:
     val doublet_h5ads

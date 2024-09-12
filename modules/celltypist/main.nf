@@ -2,7 +2,7 @@ process CELLTYPIST {
     label 'gpus'
     container 'quay.io/teichlab/celltypist:latest'
     containerOptions "--nv --bind ${params.mount}"
-    publishDir "${params.outdir}/celltypist/", mode: 'copy'
+    publishDir "${params.outdir}/rna_celltypist/", mode: 'copy'
 
     input:
     val name
