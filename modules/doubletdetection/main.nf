@@ -13,9 +13,10 @@ process DOUBLETDETECTION {
     path "${name}_doubletdetection.h5ad", emit: output_h5ad
 
     script:
-    if(demultiplexing == 'true')
-        """
-        export NUMBA_CACHE_DIR=\$PWD
+    """
+    export NUMBA_CACHE_DIR='/tmp/numba_cache'
+    export MPLCONFIGDIR='/tmp/numba_cache'
+    if [ "${demultiplexing}" == 'true' ]; then
         python ${baseDir}/bin/demultiplex.py \
             ${cellbender_h5} \
             --output ${name}_hashsolo.h5ad
@@ -23,22 +24,20 @@ process DOUBLETDETECTION {
             ${name}_hashsolo.h5ad \
             ${name}_doubletdetection.h5ad \
             --filtered_h5 ${filtered_path}
-        """
-    else if (params.remove_doublets)
-        """
-        export NUMBA_CACHE_DIR=\$PWD
+            --numba_cache_dir \$NUMBA_CACHE_DIR
+    elif [ "${params.remove_doublets}" == 'true' ]; then
         python ${baseDir}/bin/doublet_detection.py \
             ${cellbender_h5} \
             ${name}_doubletdetection.h5ad \
             --filtered_h5 ${filtered_path} \
-            --remove_doublets
-        """
+            --remove_doublets \
+            --numba_cache_dir \$NUMBA_CACHE_DIR
     else
-        """
-        export NUMBA_CACHE_DIR=\$PWD
         python ${baseDir}/bin/doublet_detection.py \
             ${cellbender_h5} \
             ${name}_doubletdetection.h5ad \
-            --filtered_h5 ${filtered_path}
-        """
+            --filtered_h5 ${filtered_path} \
+            --numba_cache_dir \$NUMBA_CACHE_DIR
+    fi
+    """
 }

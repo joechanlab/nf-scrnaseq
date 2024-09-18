@@ -16,6 +16,7 @@ process EXTRACT_RNA {
     script:
     """
     export PATH=/opt/conda/envs/muon/bin/:$PATH
+    export NUMBA_CACHE_DIR=\$PWD
     python ${baseDir}/bin/extract_rna.py ${raw_path} ${name}_raw_RNA.h5ad ${name}_raw_ATAC.h5ad
     python ${baseDir}/bin/extract_rna.py ${filtered_path} ${name}_filtered_RNA.h5ad ${name}_filtered_ATAC.h5ad
     """
