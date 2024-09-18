@@ -24,20 +24,17 @@ process DOUBLETDETECTION {
             ${name}_hashsolo.h5ad \
             ${name}_doubletdetection.h5ad \
             --filtered_h5 ${filtered_path}
-            --numba_cache_dir \$NUMBA_CACHE_DIR
     elif [ "${params.remove_doublets}" == 'true' ]; then
         python ${baseDir}/bin/doublet_detection.py \
             ${cellbender_h5} \
             ${name}_doubletdetection.h5ad \
             --filtered_h5 ${filtered_path} \
-            --remove_doublets \
-            --numba_cache_dir \$NUMBA_CACHE_DIR
+            --remove_doublets
     else
         python ${baseDir}/bin/doublet_detection.py \
             ${cellbender_h5} \
             ${name}_doubletdetection.h5ad \
-            --filtered_h5 ${filtered_path} \
-            --numba_cache_dir \$NUMBA_CACHE_DIR
+            --filtered_h5 ${filtered_path}
     fi
     """
 }
