@@ -66,7 +66,7 @@ workflow {
     if (params.celltypist.skip) {
         REPORT(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_h5ad, POSTPROCESSING.out.postprocessing_scvi_h5ad)
     } else {
-        CELLTYPIST(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_scvi_h5ad)
+        CELLTYPIST(POSTPROCESSING.out.name, POSTPROCESSING.out.postprocessing_scvi_h5ad, POSTPROCESSING.out.postprocessing_h5ad)
         REPORT(CELLTYPIST.out.name, CELLTYPIST.out.postprocessing_h5ad, CELLTYPIST.out.celltypist_scvi_h5ad)
     }
 

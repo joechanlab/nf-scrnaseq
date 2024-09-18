@@ -8,11 +8,12 @@ process CELLTYPIST {
     input:
     val name
     path postprocessing_scvi_h5ad
+    path postprocessing_h5ad
 
     output:
     val "${name}", emit: name
     path "${name}_celltypist_scvi.h5ad", emit: celltypist_scvi_h5ad
-    path "${postprocessing_scvi_h5ad}", emit: postprocessing_h5ad
+    path "${postprocessing_h5ad}", emit: postprocessing_h5ad
 
     script:
     def gpu_index = task.index % params.maxForks
