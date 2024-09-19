@@ -104,7 +104,8 @@ if not args.use_scvi:
     PCA
     """
     print("Performing PCA")
-    pca = PCA(n_components=args.n_pca_components, svd_solver="randomized")
+    n_components = min(args.n_pca_components, norm_df.shape[0], norm_df.shape[1])
+    pca = PCA(n_components=n_components, svd_solver="randomized")
     pca.fit(norm_df)
 
     # By Kneepoint
