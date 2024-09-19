@@ -1,7 +1,7 @@
 process DOUBLETDETECTION {
     label 'process_medium'
     container 'library://mamie_wang/nf-scrnaseq/doubletdetection.sif:latest'
-    containerOptions "--bind ${params.mount}"
+    containerOptions "--bind ${params.mount},/home"
     publishDir "${params.outdir}/rna_doubletdetection/", mode: 'copy'
     cache 'lenient'
 
