@@ -47,8 +47,8 @@ print(f"Read {args.input_h5ad}")
 
 # Perform normalization required by celltypist
 if args.normalize:
-    adata.layers["scvi"] = adata.X
-    adata.X = adata.layers["X_scran"]
+    adata.layers["scvi"] = adata.X.copy()
+    adata.X = adata.layers["X_scran"].copy()
     sc.pp.normalize_total(adata, target_sum=10**4)
     sc.pp.log1p(adata)
 

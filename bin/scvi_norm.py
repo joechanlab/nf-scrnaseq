@@ -27,7 +27,7 @@ adata = sc.read_h5ad(args.input)
 sc.pp.filter_cells(adata, min_genes=200)
 sc.pp.filter_genes(adata, min_cells=3)
 
-adata.layers["X_scran"] = adata.X
+adata.layers["X_scran"] = adata.X.copy()
 sc.pp.log1p(adata, base=2)
 
 sc.pp.highly_variable_genes(
