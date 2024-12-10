@@ -20,11 +20,13 @@ process POSTPROCESSING {
         ${scvi_h5ad} \
         ${name}_postprocessing.h5ad \
         --n_pca_components ${params.postprocessing.n_pca_components} \
-        --metadata ${params.postprocessing.metadata}
+        --metadata ${params.postprocessing.metadata} \
+        --leiden_res ${params.postprocessing.leiden_res}
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
         ${name}_postprocessing_scvi.h5ad \
         --use_scvi \
-        --metadata ${params.postprocessing.metadata}
+        --metadata ${params.postprocessing.metadata} \
+        --leiden_res ${params.postprocessing.leiden_res}
     """
 }
