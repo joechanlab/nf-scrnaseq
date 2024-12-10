@@ -1,7 +1,7 @@
 process CELLBENDER {
     label 'gpus'
     container 'us.gcr.io/broad-dsde-methods/cellbender:latest'
-    containerOptions '--nv --bind ${params.mount}'
+    containerOptions "--nv --bind ${params.mount}"
     publishDir "${params.outdir}/rna_cellbender/", mode: 'copy'
     cache 'lenient'
 
@@ -20,7 +20,8 @@ process CELLBENDER {
             ${raw_path} \
             ${name}_cellbender.h5 \
             ${expected_droplets} \
-            --filtered ${filtered_path}
+            --filtered ${filtered_path} \
+            --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
         """
     else
         """
@@ -28,6 +29,7 @@ process CELLBENDER {
             ${raw_path} \
             ${name}_cellbender.h5 \
             ${expected_droplets} \
-            --filtered ${filtered_path}
+            --filtered ${filtered_path} \
+            --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
         """
 }

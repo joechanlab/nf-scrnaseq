@@ -15,6 +15,7 @@ parser.add_argument(
     help="Estimate of total number of droplets.",
 )
 parser.add_argument("--filtered", nargs="*", help="Path to filtered cellranger output.")
+parser.add_argument("--empty_drop_training_fraction", default=0.2, type=float)
 
 args = parser.parse_args()
 
@@ -30,7 +31,8 @@ cellbender remove-background \
       --input {args.raw_h5} \
       --output {args.output_h5} \
       --expected-cells {expected_cells} \
-      --total-droplets-included {args.total_droplets_included}
+      --total-droplets-included {args.total_droplets_included} \
+      --empty-drop-training-fraction {args.empty_drop_training_fraction}
 """
 
 print(command)
