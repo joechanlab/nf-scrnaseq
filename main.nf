@@ -44,7 +44,7 @@ workflow {
 
     // Optional: aggregate the outputs
     if (params.aggregation) {
-        AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+        AGGREGATION(DOUBLETDETECTION.out.output_h5ad.collect())
         outlier_input = AGGREGATION.out
     } else {
         outlier_input = DOUBLETDETECTION.out
