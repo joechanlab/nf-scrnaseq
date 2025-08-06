@@ -13,23 +13,42 @@ process CELLBENDER {
 
     script:
     def gpu_index = task.index % params.maxForks
+    def has_droplets = expected_droplets && expected_droplets != "null" && expected_droplets != ""
+
     if(task.executor == 'singularity')
         """
         export CUDA_VISIBLE_DEVICES=$gpu_index
-        python ${baseDir}/bin/run_cellbender.py \
-            ${raw_path} \
-            ${name}_cellbender.h5 \
-            ${expected_droplets} \
-            --filtered ${filtered_path} \
-            --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+
+        if [ -n "${has_droplets ? expected_droplets : ""}" ]; then
+            python ${baseDir}/bin/run_cellbender.py \\
+                ${raw_path} \\
+                ${name}_cellbender.h5 \\
+                ${expected_droplets} \\
+                --filtered ${filtered_path} \\
+                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+        else
+            python ${baseDir}/bin/run_cellbender.py \\
+                ${raw_path} \\
+                ${name}_cellbender.h5 \\
+                --filtered ${filtered_path} \\
+                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+        fi
         """
     else
         """
-        python ${baseDir}/bin/run_cellbender.py \
-            ${raw_path} \
-            ${name}_cellbender.h5 \
-            ${expected_droplets} \
-            --filtered ${filtered_path} \
-            --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+        if [ -n "${has_droplets ? expected_droplets : ""}" ]; then
+            python ${baseDir}/bin/run_cellbender.py \\
+                ${raw_path} \\
+                ${name}_cellbender.h5 \\
+                ${expected_droplets} \\
+                --filtered ${filtered_path} \\
+                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+        else
+            python ${baseDir}/bin/run_cellbender.py \\
+                ${raw_path} \\
+                ${name}_cellbender.h5 \\
+                --filtered ${filtered_path} \\
+                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+        fi
         """
 }
