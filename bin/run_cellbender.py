@@ -16,6 +16,7 @@ parser.add_argument(
     help="Estimate of total number of droplets (optional).",
 )
 parser.add_argument("--filtered", nargs="*", help="Path to filtered cellranger output.")
+parser.add_argument("--empty_drop_training_fraction", default=0.2, type=float)
 
 args = parser.parse_args()
 
@@ -31,6 +32,7 @@ command_parts = [
     "--cuda",
     f"--input {args.raw_h5}",
     f"--output {args.output_h5}",
+    f"--empty-drop-training-fraction {args.empty_drop_training_fraction}",
 ]
 
 # Only add expected-cells and total-droplets-included if total_droplets_included has a value
