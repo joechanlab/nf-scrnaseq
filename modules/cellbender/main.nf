@@ -6,14 +6,15 @@ process CELLBENDER {
     cache 'lenient'
 
     input:
-    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)
+    tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets), val(empty_drop_training_fraction)
 
     output:
-    tuple val(name), path("${name}_cellbender.h5"), val(filtered_path), val(demultiplexing), val(expected_droplets), emit: output
+    tuple val(name), path("${name}_cellbender.h5"), val(filtered_path), val(demultiplexing), emit: output
 
     script:
     def gpu_index = task.index % params.maxForks
     def has_droplets = expected_droplets && expected_droplets != "null" && expected_droplets != ""
+    def has_empty_drop_training_fraction = empty_drop_training_fraction && empty_drop_training_fraction != "null" && empty_drop_training_fraction != ""
 
     if(task.executor == 'singularity')
         """
@@ -23,15 +24,15 @@ process CELLBENDER {
             python ${baseDir}/bin/run_cellbender.py \\
                 ${raw_path} \\
                 ${name}_cellbender.h5 \\
-                ${expected_droplets} \\
-                --filtered ${filtered_path} \\
-                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+                --total_droplets_included ${expected_droplets} \\
+                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
+                --filtered ${filtered_path}
         else
             python ${baseDir}/bin/run_cellbender.py \\
                 ${raw_path} \\
                 ${name}_cellbender.h5 \\
-                --filtered ${filtered_path} \\
-                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
+                --filtered ${filtered_path}
         fi
         """
     else
@@ -40,15 +41,15 @@ process CELLBENDER {
             python ${baseDir}/bin/run_cellbender.py \\
                 ${raw_path} \\
                 ${name}_cellbender.h5 \\
-                ${expected_droplets} \\
-                --filtered ${filtered_path} \\
-                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+                --total_droplets_included ${expected_droplets} \\
+                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
+                --filtered ${filtered_path}
         else
             python ${baseDir}/bin/run_cellbender.py \\
                 ${raw_path} \\
                 ${name}_cellbender.h5 \\
-                --filtered ${filtered_path} \\
-                --empty_drop_training_fraction ${params.cellbender.empty_drop_training_fraction}
+                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
+                --filtered ${filtered_path}
         fi
         """
 }

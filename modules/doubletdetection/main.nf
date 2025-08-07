@@ -6,11 +6,11 @@ process DOUBLETDETECTION {
     cache 'lenient'
 
     input:
-    tuple val(name), path(cellbender_h5), val(filtered_path), val(demultiplexing), val(expected_droplets)
+    tuple val(name), path(cellbender_h5), val(filtered_path), val(demultiplexing)
 
     output:
     val "${name}", emit: name
-    path "${name}_doubletdetection.h5ad", emit: doublet_h5ad
+    path "${name}_doubletdetection.h5ad", emit: output_h5ad
 
     script:
     """

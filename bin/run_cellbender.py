@@ -9,14 +9,21 @@ parser = argparse.ArgumentParser(
 parser.add_argument("raw_h5", help="Path to raw 10x h5 format.")
 parser.add_argument("output_h5", help="Path to output h5 format.")
 parser.add_argument(
-    "total_droplets_included",
+    "--total_droplets_included",
     nargs="?",
     default=None,
     type=int,
     help="Estimate of total number of droplets (optional).",
 )
+parser.add_argument(
+    "--empty_drop_training_fraction",
+    nargs="?",
+    default=None,
+    type=float,
+    help="Fraction of empty droplets to use for training (optional).",
+)
 parser.add_argument("--filtered", nargs="*", help="Path to filtered cellranger output.")
-parser.add_argument("--empty_drop_training_fraction", default=0.2, type=float)
+
 
 args = parser.parse_args()
 
@@ -32,7 +39,6 @@ command_parts = [
     "--cuda",
     f"--input {args.raw_h5}",
     f"--output {args.output_h5}",
-    f"--empty-drop-training-fraction {args.empty_drop_training_fraction}",
 ]
 
 # Only add expected-cells and total-droplets-included if total_droplets_included has a value
@@ -41,6 +47,12 @@ if args.total_droplets_included is not None:
         [
             f"--expected-cells {expected_cells}",
             f"--total-droplets-included {args.total_droplets_included}",
+        ]
+    )
+if args.empty_drop_training_fraction is not None:
+    command_parts.extend(
+        [
+            f"--empty-drop-training-fraction {args.empty_drop_training_fraction}",
         ]
     )
 

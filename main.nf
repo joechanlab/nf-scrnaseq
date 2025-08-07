@@ -23,8 +23,8 @@ workflow {
 
     // Create a channel from the paths
     out = Channel.from(sample_sheet_data).map { row ->
-        def (name, raw_path, filtered_path, demultiplexing, expected_droplets) = row
-        return tuple(name, file(raw_path), filtered_path, demultiplexing.toLowerCase(), expected_droplets)
+        def (name, raw_path, filtered_path, demultiplexing, expected_droplets, empty_drop_training_fraction) = row
+        return tuple(name, file(raw_path), filtered_path, demultiplexing.toLowerCase(), expected_droplets, empty_drop_training_fraction)
     }
 
     // Run Cellbender
@@ -44,7 +44,7 @@ workflow {
 
     // Optional: aggregate the outputs
     if (params.aggregation) {
-        AGGREGATION(DOUBLETDETECTION.out.doublet_h5ad.collect())
+        AGGREGATION(DOUBLETDETECTION.out.output_h5ad.collect())
         outlier_input = AGGREGATION.out
     } else {
         outlier_input = DOUBLETDETECTION.out
