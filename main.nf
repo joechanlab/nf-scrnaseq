@@ -16,16 +16,25 @@ include { SEACELLS } from './modules/seacells'
 
 workflow {
     // Access the samplesheet
-    sample_sheet = file(params.samplesheet)
+    sample_sheet_ch = Channel
+    .fromPath(params.samplesheet)
+    .splitCsv(header: true)   // uses column names; order no longer matters
+    .map { row ->
+        // helper to fetch a possibly-missing/blank field as null
+        def opt = { key -> (row.containsKey(key) && row[key]?.toString()?.trim()) ? row[key].toString().trim() : null }
 
-    // Read the sample sheet as a CSV
-    sample_sheet_data = sample_sheet.text.readLines().drop(1).collect { it.split(',') }
+        def name   = row.name?.toString()?.trim()
+        def raw    = file(row.raw_path)
+        def filt   = row.filtered_path?.toString()?.trim()
+        def demux  = row.demultiplexing?.toString()?.trim()?.toLowerCase()
 
-    // Create a channel from the paths
-    out = Channel.from(sample_sheet_data).map { row ->
-        def (name, raw_path, filtered_path, demultiplexing, expected_droplets, empty_drop_training_fraction) = row
-        return tuple(name, file(raw_path), filtered_path, demultiplexing.toLowerCase(), expected_droplets, empty_drop_training_fraction)
+        // OPTIONAL columns (may be missing or blank)
+        def expDrops   = opt('expected_droplets')
+        def emptyFrac  = opt('empty_drop_training_fraction')
+
+        tuple(name, raw, filt, demux, expDrops, emptyFrac)
     }
+    out = sample_sheet_ch
 
     // Run Cellbender
     if (params.atac) {
