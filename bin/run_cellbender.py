@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import subprocess
-from cellbender.remove_background.downstream import load_anndata_from_input
+from cellbender.remove_background.downstream import anndata_from_h5
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data."
@@ -30,8 +30,9 @@ args = parser.parse_args()
 # estimate of number of cells from cellranger
 expected_cells = 0
 for idx, filtered_file_path in enumerate(args.filtered, start=1):
-    adata_filtered = load_anndata_from_input(filtered_file_path)
+    adata_filtered = anndata_from_h5(filtered_file_path)
     expected_cells += adata_filtered.shape[0]
+del adata_filtered
 
 # Build command with conditional parameters
 command_parts = [
@@ -39,13 +40,12 @@ command_parts = [
     "--cuda",
     f"--input {args.raw_h5}",
     f"--output {args.output_h5}",
+    f"--expected-cells {expected_cells}",
 ]
 
-# Only add expected-cells and total-droplets-included if total_droplets_included has a value
 if args.total_droplets_included is not None:
     command_parts.extend(
         [
-            f"--expected-cells {expected_cells}",
             f"--total-droplets-included {args.total_droplets_included}",
         ]
     )
