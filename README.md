@@ -13,10 +13,11 @@ First, prepare a samplesheet with your input data that looks as follows, where e
 
 `samplesheet.csv`:
 ```csv
-sample, raw_h5, filtered_h5, demultiplexing, expected_droplets
-CONTROL_REP1, raw_feature_bc_matrix.h5, filtered_feature_bc_matrix.h5, false, 50000
+sample, raw_path, filtered_path, demultiplexing
+CONTROL_REP1, raw_feature_bc_matrix.h5, filtered_feature_bc_matrix.h5, false
 ```
 > [!Note]
+> Optional columns `expected_droplets` and `empty_drop_training_fraction` for cellbender
 > See suggestions on choice of the `expected_droplets` parameter [here](https://www.10xgenomics.com/analysis-guides/background-removal-guidance-for-single-cell-gene-expression-datasets-using-third-party-tools).
 
 Next, prepare a parameter YAML file that looks as follows:
@@ -37,11 +38,11 @@ scvi:                                 # scvi parameters (see bin/scvi_norm.py)
 postprocessing:                       # Postprocessing parameters (see bin/postprocessing.py)
    n_pca_components: 100
    n_diffmap_components: 20
-   metadata: "./metadata.csv"         # path to metadata variables
+   metadata: "./metadata.csv"         # path to metadata variables (optional)
 celltypist:
     model: "Human_Lung_Atlas.pkl"     # model to use for celltypist
 report:
-   plot: "./markers.csv"              # custom variables to plot
+   plot: "./markers.csv"              # custom variables to plot (optional)
 seacells:                             # SEACells parameters (see bin/run_SEACells.py)
     n_SEACells: 25
     build_kernel_on: "X_pca"
