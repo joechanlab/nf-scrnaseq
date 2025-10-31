@@ -12,44 +12,25 @@ process CELLBENDER {
     tuple val(name), path("${name}_cellbender.h5"), val(filtered_path), val(demultiplexing), emit: output
 
     script:
-    def gpu_index = task.index % params.maxForks
-    def has_droplets = expected_droplets && expected_droplets != "null" && expected_droplets != ""
-    def has_empty_drop_training_fraction = empty_drop_training_fraction && empty_drop_training_fraction != "null" && empty_drop_training_fraction != ""
+    // Choose a GPU (customize to your scheme)
+    def gpu_index = task.index % (params.maxForks ?: 1)
 
-    if(task.executor == 'singularity')
-        """
-        export CUDA_VISIBLE_DEVICES=$gpu_index
+    def _toStr = { it?.toString()?.trim() }
+    def expStr   = _toStr(expected_droplets)
+    def emptyStr = _toStr(empty_drop_training_fraction)
 
-        if [ -n "${has_droplets ? expected_droplets : ""}" ]; then
-            python ${baseDir}/bin/run_cellbender.py \\
-                ${raw_path} \\
-                ${name}_cellbender.h5 \\
-                --total_droplets_included ${expected_droplets} \\
-                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
-                --filtered ${filtered_path}
-        else
-            python ${baseDir}/bin/run_cellbender.py \\
-                ${raw_path} \\
-                ${name}_cellbender.h5 \\
-                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
-                --filtered ${filtered_path}
-        fi
-        """
-    else
-        """
-        if [ -n "${has_droplets ? expected_droplets : ""}" ]; then
-            python ${baseDir}/bin/run_cellbender.py \\
-                ${raw_path} \\
-                ${name}_cellbender.h5 \\
-                --total_droplets_included ${expected_droplets} \\
-                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
-                --filtered ${filtered_path}
-        else
-            python ${baseDir}/bin/run_cellbender.py \\
-                ${raw_path} \\
-                ${name}_cellbender.h5 \\
-                ${has_empty_drop_training_fraction ? "--empty_drop_training_fraction ${empty_drop_training_fraction}" : ""} \\
-                --filtered ${filtered_path}
-        fi
-        """
+    def expFlag   = (expStr && expStr != 'null')   ? "--total_droplets_included ${expStr}" : ''
+    def emptyFlag = (emptyStr && emptyStr != 'null') ? "--empty_drop_training_fraction ${emptyStr}" : ''
+
+    // For Singularity we often need to export CUDA_VISIBLE_DEVICES explicitly
+    def maybeCudaExport = (task.executor == 'singularity') ? "export CUDA_VISIBLE_DEVICES=${gpu_index}\n" : ""
+
+    """
+    ${maybeCudaExport}python ${baseDir}/bin/run_cellbender.py \\
+        ${raw_path} \\
+        ${name}_cellbender.h5 \\
+        ${expFlag} \\
+        ${emptyFlag} \\
+        --filtered ${filtered_path}
+    """
 }

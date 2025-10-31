@@ -10,3 +10,4 @@ data/
 *.svg
 *.log
 __pycache__/
+log/
