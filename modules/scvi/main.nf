@@ -14,6 +14,16 @@ process SCVI {
     path "${name}_scvi.h5ad", emit: scvi_h5ad
 
     script:
+    def metaArg = ''
+    if (params.scvi.metadata &&
+        params.scvi.metadata.toString().toLowerCase() !in ['none', 'null', '']) {
+        metaArg = "--metadata ${params.scvi.metadata}"
+    }
+    def sampleKeyArg = ''
+    if (params.scvi.sample_key &&
+        params.scvi.sample_key.toString().toLowerCase() !in ['none', 'null', '']) {
+        sampleKeyArg = "--sample_key ${params.scvi.sample_key}"
+    }
     """
     export PYTHONNOUSERSITE=1
     export NUMBA_CACHE_DIR=\$PWD
@@ -21,6 +31,8 @@ process SCVI {
         ${scran_h5ad} \
         ${name}_scvi.h5ad \
         --n_latent ${params.scvi.n_latent} \
-        --n_top_genes ${params.scvi.n_top_genes}
+        --n_top_genes ${params.scvi.n_top_genes} \
+        ${metaArg} \
+        ${sampleKeyArg}
     """
 }

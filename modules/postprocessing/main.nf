@@ -14,11 +14,6 @@ process POSTPROCESSING {
     path "${name}_postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
 
     script:
-    def metaArg = ''
-    if (params.postprocessing.metadata &&
-        params.postprocessing.metadata.toString().toLowerCase() !in ['none', 'null', '']) {
-        metaArg = "--metadata ${params.postprocessing.metadata}"
-    }
     """
     export NUMBA_CACHE_DIR=\$PWD
     export MPLCONFIGDIR=\$PWD
@@ -26,13 +21,11 @@ process POSTPROCESSING {
         ${scvi_h5ad} \
         ${name}_postprocessing.h5ad \
         --n_pca_components ${params.postprocessing.n_pca_components} \
-        ${metaArg} \
         --leiden_res ${params.postprocessing.leiden_res}
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
         ${name}_postprocessing_scvi.h5ad \
         --use_scvi \
-        ${metaArg} \
         --leiden_res ${params.postprocessing.leiden_res}
     """
 }
