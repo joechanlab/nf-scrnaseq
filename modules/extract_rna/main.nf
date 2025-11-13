@@ -9,7 +9,7 @@ process EXTRACT_RNA {
     tuple val(name), path(raw_path), val(filtered_path), val(demultiplexing), val(expected_droplets)
 
     output:
-    tuple val(name), path("${name}_raw_RNA.h5ad"), path("${name}_filtered_RNA.h5ad"), val(demultiplexing), val(expected_droplets), emit: output
+    tuple val(name), path("${name}_raw_RNA.h5"), path("${name}_filtered_RNA.h5"), val(demultiplexing), val(expected_droplets), emit: output
     path "${name}_raw_ATAC.h5ad", emit: atac_raw
     path "${name}_filtered_ATAC.h5ad", emit: atac_filtered
 
@@ -17,7 +17,7 @@ process EXTRACT_RNA {
     """
     export PATH=/opt/conda/envs/muon/bin/:$PATH
     export NUMBA_CACHE_DIR=\$PWD
-    python ${baseDir}/bin/extract_rna.py ${raw_path} ${name}_raw_RNA.h5ad ${name}_raw_ATAC.h5ad
-    python ${baseDir}/bin/extract_rna.py ${filtered_path} ${name}_filtered_RNA.h5ad ${name}_filtered_ATAC.h5ad
+    python ${baseDir}/bin/extract_rna.py ${raw_path} ${name}_raw_RNA.h5 ${name}_raw_ATAC.h5ad
+    python ${baseDir}/bin/extract_rna.py ${filtered_path} ${name}_filtered_RNA.h5 ${name}_filtered_ATAC.h5ad
     """
 }
