@@ -10,16 +10,18 @@ process SEACELLS {
 
     output:
     val "${name}", emit: name
-    path "${name}_seacells.h5ad", emit: seacells_h5ad
-    path "${name}_seacells_assignments", emit: seacells_assignments
+    path "*_seacells.h5ad", emit: seacells_h5ad
+    path "*_seacells_assignments", emit: seacells_assignments
 
     script:
+    def full  = input_h5ad.baseName
+    def base = full.contains("__") ? full.split("__", 2)[1] : full
     """
     export NUMBA_CACHE_DIR=\$PWD
     /usersoftware/chanj3/SEACells/bin/python ${baseDir}/bin/run_SEACells.py \
         ${input_h5ad} \
-        ${name}_seacells.h5ad \
-        ${name}_seacells_assignments \
+        ${base}_seacells.h5ad \
+        ${base}_seacells_assignments \
         --n_SEACells ${params.seacells.n_SEACells} \
         --build_kernel_on ${params.seacells.build_kernel_on} \
         --n_waypoint_eigs ${params.seacells.n_waypoint_eigs}

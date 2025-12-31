@@ -36,7 +36,7 @@ workflow {
     }
     out = sample_sheet_ch
 
-    // Run Cellbender
+    // Extract RNA from multiome data if needed
     if (params.atac) {
         EXTRACT_RNA(out)
         out = EXTRACT_RNA.out.output
@@ -52,15 +52,30 @@ workflow {
     DOUBLETDETECTION(out)
 
     // Optional: aggregate the outputs
-    if (params.aggregation) {
-        AGGREGATION(DOUBLETDETECTION.out.output_h5ad.collect())
-        outlier_input = AGGREGATION.out
+    def dd_name_ch = DOUBLETDETECTION.out.name
+    def dd_h5ad_ch = DOUBLETDETECTION.out.output_h5ad
+
+    // 5) Optional aggregation → decide which channels feed OUTLIER_FILTER
+    def outlier_name_ch
+    def outlier_h5ad_ch
+
+    if (params.aggregation.enable) {
+        // collect() gathers all per-sample h5ad paths for AGGREGATION
+        AGGREGATION(dd_h5ad_ch.collect())
+
+        // experiment-level name (single value) – broadcast automatically
+        outlier_name_ch = AGGREGATION.out.name
+
+        // aggregation*.h5ad comes out as a list; flatten() → one file per emission
+        outlier_h5ad_ch = AGGREGATION.out.output_h5ad.flatten()
     } else {
-        outlier_input = DOUBLETDETECTION.out
+        // No aggregation: pass through per-sample files directly
+        outlier_name_ch = dd_name_ch
+        outlier_h5ad_ch = dd_h5ad_ch
     }
 
-    // Filter out outliers
-    OUTLIER_FILTER(outlier_input.name, outlier_input.output_h5ad)
+    // Filter out outliers — one task per aggregation_h5ad
+    OUTLIER_FILTER(outlier_name_ch, outlier_h5ad_ch)
 
     // SCRAN normalization
     SCRAN(OUTLIER_FILTER.out.name, OUTLIER_FILTER.out.outlier_filtered_h5ad)

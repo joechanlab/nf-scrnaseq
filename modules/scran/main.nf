@@ -6,18 +6,20 @@ process SCRAN {
 
     input:
     val name
-    path aggregation_h5ad
+    path outlier_filter_h5ad
 
     output:
     val "${name}", emit: name
-    path "${name}_scran.h5ad", emit: scran_h5ad
+    path "*_scran.h5ad", emit: scran_h5ad
 
     script: // set home directory to cache basilisk
+    def full = outlier_filter_h5ad.baseName
+    def base = (full.contains("__")) ? full.split("__", 2)[1] : full
     """
     export PATH=/opt/conda/envs/scran/bin/:$PATH
     export HOME=\$PWD
     Rscript ${baseDir}/bin/scran.R \
-        ${aggregation_h5ad} \
-        "${name}_scran.h5ad"
+        ${outlier_filter_h5ad} \
+        "${base}_scran.h5ad"
     """
 }

@@ -10,21 +10,23 @@ process POSTPROCESSING {
 
     output:
     val "${name}", emit: name
-    path "${name}_postprocessing.h5ad", emit: postprocessing_h5ad
-    path "${name}_postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
+    path "*_postprocessing.h5ad", emit: postprocessing_h5ad
+    path "*_postprocessing_scvi.h5ad", emit: postprocessing_scvi_h5ad
 
     script:
+    def full  = scvi_h5ad.baseName
+    def base = full.contains("__") ? full.split("__", 2)[1] : full
     """
     export NUMBA_CACHE_DIR=\$PWD
     export MPLCONFIGDIR=\$PWD
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
-        ${name}_postprocessing.h5ad \
+        ${base}_postprocessing.h5ad \
         --n_pca_components ${params.postprocessing.n_pca_components} \
         --leiden_res ${params.postprocessing.leiden_res}
     python ${baseDir}/bin/postprocessing.py \
         ${scvi_h5ad} \
-        ${name}_postprocessing_scvi.h5ad \
+        ${base}_postprocessing_scvi.h5ad \
         --use_scvi \
         --leiden_res ${params.postprocessing.leiden_res}
     """

@@ -10,10 +10,12 @@ process REPORT {
     path celltypist_scvi_h5ad
 
     output:
-    path "${name}_report.ipynb", emit: report_ipynb
-    path "${name}_report.html", emit: report_html
+    path "*_report.ipynb", emit: report_ipynb
+    path "*_report.html", emit: report_html
 
     script:
+    def full  = postprocessing_h5ad.baseName
+    def base = full.contains("__") ? full.split("__", 2)[1] : full
     def plotsParam = params.report.plot
     def plotsArg = ''
     if (!plotsParam || plotsParam.toString().trim().toLowerCase() in ['none','null','']) {
@@ -24,7 +26,7 @@ process REPORT {
     """
     export HOME=\$PWD
     python -m ipykernel install --user --name postprocessing
-    papermill ${baseDir}/bin/QC.ipynb ${name}_report.ipynb ${plotsArg}
-    jupyter nbconvert --to html ${name}_report.ipynb
+    papermill ${baseDir}/bin/QC.ipynb ${base}_report.ipynb ${plotsArg}
+    jupyter nbconvert --to html ${base}_report.ipynb
     """
 }
