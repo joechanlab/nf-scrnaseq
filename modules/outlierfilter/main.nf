@@ -10,15 +10,17 @@ process OUTLIER_FILTER {
 
     output:
     val "${name}", emit: name
-    path "${name}_outlier_filtered.h5ad", emit: outlier_filtered_h5ad
+    path "*_outlier_filtered.h5ad", emit: outlier_filtered_h5ad
 
     script:
+    def base = aggregation_h5ad.baseName
+
     if (params.remove_outliers)
         """
         export NUMBA_CACHE_DIR=\$PWD
         python ${baseDir}/bin/outlier_filter.py \
             ${aggregation_h5ad} \
-            ${name}_outlier_filtered.h5ad \
+            ${base}_outlier_filtered.h5ad \
             --remove_outliers
         """
     else
@@ -26,6 +28,6 @@ process OUTLIER_FILTER {
         export NUMBA_CACHE_DIR=\$PWD
         python ${baseDir}/bin/outlier_filter.py \
             ${aggregation_h5ad} \
-            ${name}_outlier_filtered.h5ad
+            ${base}_outlier_filtered.h5ad
         """
 }
