@@ -86,9 +86,7 @@ if len(all_predictions) > 1:
             adata.obs[new_col] = pred_adata.obs[col]
     print(f"Combined predictions from {len(all_predictions)} models")
 else:
-    adata = all_predictions[0].to_adata(
-        insert_labels=True, insert_conf=True, insert_prob=True
-    )
+    adata = all_predictions[0]
 
 # Write data
 adata.write_h5ad(args.output_h5ad)
